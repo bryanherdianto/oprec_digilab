@@ -67,7 +67,7 @@ function LetterReel({
 
 export default function KodeAslab() {
     const [cycle, setCycle] = useState(0);
-    const [showLines, setShowLines] = useState(false);
+    const [_, setShowLines] = useState(false);
 
     const leftDirection = cycle % 2 === 0 ? "up" : "down";
     const rightDirection = cycle % 2 === 0 ? "down" : "up";
@@ -92,7 +92,7 @@ export default function KodeAslab() {
 
     return (
         <div className="relative flex items-center justify-center">
-            <p className="text-4xl md:text-5xl font-mono text-white mr-7">What's your code?</p>
+            <p className="text-4xl md:text-5xl font-mono text-white mr-7">What&apos;s your code?</p>
             <LetterReel direction={leftDirection} trigger={cycle} />
             <LetterReel direction={rightDirection} trigger={cycle} />
             <Button size="lg" className='font-sans text-lg rounded-full absolute bottom-85' variant='outline'>Join Now</Button>

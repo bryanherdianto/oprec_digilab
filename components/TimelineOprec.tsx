@@ -48,7 +48,7 @@ export function TimlineOprec() {
       title: "May",
       content: (
         <div>
-          <p className="mb-8 text-md font-normal text-neutral-800 md:text-sm dark:text-neutral-200">
+          <div className="mb-8 text-md font-normal text-neutral-800 md:text-sm dark:text-neutral-200">
             Several tests are conducted to select the best candidates for the lab. Some of the test include:
             <ul className="ml-8 mt-2 list-disc space-y-1">
               <li className="text-md font-normal text-neutral-800 md:text-sm dark:text-neutral-200">
@@ -67,7 +67,7 @@ export function TimlineOprec() {
                 Interview
               </li>
             </ul>
-          </p>
+          </div>
           <div className="grid grid-cols-2 gap-4">
             <img
               src="https://assets.aceternity.com/pro/hero-sections.png"
