@@ -67,7 +67,7 @@ function LetterReel({
 
 export default function KodeAslab() {
     const [cycle, setCycle] = useState(0);
-    const [_, setShowLines] = useState(false);
+    const [, setShowLines] = useState(false);
 
     const leftDirection = cycle % 2 === 0 ? "up" : "down";
     const rightDirection = cycle % 2 === 0 ? "down" : "up";
