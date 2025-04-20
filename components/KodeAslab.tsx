@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import React, { useEffect, useState } from "react";
 
 const ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".repeat(3).split("");
-const LETTER_HEIGHT = 128;
 const EXTRA_OFFSET = 24;
 
 function LetterReel({
@@ -15,6 +14,28 @@ function LetterReel({
     trigger: number;
 }) {
     const [translateY, setTranslateY] = useState(0);
+
+    function useLetterHeight() {
+        const [letterHeight, setLetterHeight] = useState(128); // default to large screen
+
+        useEffect(() => {
+            const checkSize = () => {
+                if (window.innerWidth < 640) {
+                    setLetterHeight(60);
+                } else {
+                    setLetterHeight(128);
+                }
+            };
+
+            checkSize(); // Run once on mount
+            window.addEventListener('resize', checkSize); // Watch for changes
+            return () => window.removeEventListener('resize', checkSize);
+        }, []);
+
+        return letterHeight;
+    }
+
+    const LETTER_HEIGHT = useLetterHeight();
 
     useEffect(() => {
         const middlePosition = 26 * LETTER_HEIGHT;
@@ -42,7 +63,7 @@ function LetterReel({
     }, [trigger, direction]);
 
     return (
-        <div className="h-screen w-[100px] relative overflow-hidden">
+        <div className="h-screen w-[40px] sm:w-[100px] relative overflow-hidden">
             <div
                 className="absolute top-0 left-0 transition-transform duration-[3000ms] ease-in-out"
                 style={{
@@ -52,7 +73,7 @@ function LetterReel({
                 {ALPHABET.map((letter, index) => (
                     <div
                         key={`${letter}-${index}`}
-                        className="h-[128px] w-[100px] flex items-center justify-center text-9xl font-mono text-white"
+                        className="h-[60px] sm:h-[128px] w-[40px] sm:w-[100px] flex items-center justify-center text-5xl sm:text-9xl font-mono text-white"
                         style={{
                             textShadow: "none",
                         }}
@@ -92,10 +113,10 @@ export default function KodeAslab() {
 
     return (
         <div className="relative flex items-center justify-center">
-            <p className="text-4xl md:text-5xl font-mono text-white mr-7">What&apos;s your code?</p>
+            <p className="text-xl sm:text-4xl md:text-5xl font-mono text-white mr-4 sm:mr-7">What&apos;s your code?</p>
             <LetterReel direction={leftDirection} trigger={cycle} />
             <LetterReel direction={rightDirection} trigger={cycle} />
-            <Button size="lg" className='font-sans text-lg rounded-full absolute bottom-85' variant='outline'>Join Now</Button>
+            <Button size="lg" className='font-sans text-lg rounded-full absolute bottom-[25vh]' variant='outline'>Join Now</Button>
         </div>
     );
 }

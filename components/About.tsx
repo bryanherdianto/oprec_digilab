@@ -2,7 +2,7 @@ import React from 'react'
 
 function About() {
     return (
-        <div id="about" className="h-screen text-center px-4 py-16 max-w-3xl mx-auto">
+        <div id="about" className="min-h-screen text-center px-4 py-16 max-w-3xl mx-auto">
             <p className="text-md font-mono font-medium mb-2 text-transparent bg-clip-text bg-gradient-to-r from-white to-black">
                 Why join Digilab?
             </p>
@@ -14,8 +14,8 @@ function About() {
                 Digital Laboratory is a multidisciplinary lab that brings together areas from Digital Systems to Programming,
                 empowering students with hands-on experience and collaborative learning to shape the future of technology.
             </p>
-            <div className="mt-8 w-full aspect-video relative">
-                <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1590041794748-2d8eb73a571c?q=80&w=3456&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')] bg-cover bg-center mask-cover mask-[url('/scribble.png')]"></div>
+            <div className="mt-8 w-full aspect-video">
+                <div className="h-full w-full bg-[url('https://images.unsplash.com/photo-1590041794748-2d8eb73a571c?q=80&w=3456&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')] bg-cover bg-center mask-contain mask-[url('/scribble.png')]"></div>
             </div>
         </div>
     )
