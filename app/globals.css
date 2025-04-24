@@ -130,6 +130,6 @@ html {
   @apply scroll-smooth;
 }
 
-body::-webkit-scrollbar {
+*::-webkit-scrollbar {
   display: none; /* Chrome, Safari, Opera */
 }

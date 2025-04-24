@@ -1,0 +1,145 @@
+"use client";
+import React, { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
+import { supabaseClient } from '@/backend/supabaseClient';
+
+interface PersonalInfoData {
+    fullName: string;
+    npm: string;
+    dateOfBirth: string;
+    batch: string;
+}
+
+const PersonalInformation = () => {
+    const [formData, setFormData] = useState<PersonalInfoData>({
+        fullName: '',
+        npm: '',
+        dateOfBirth: '',
+        batch: ''
+    });
+
+    const [loading, setLoading] = useState(false);
+    const [message, setMessage] = useState({ text: '', type: '' });
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+        const { name, value } = e.target;
+        setFormData({
+            ...formData,
+            [name]: value
+        });
+    };
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setLoading(true);
+        setMessage({ text: '', type: '' });
+
+        try {
+            const user = supabaseClient.auth.getUser();
+
+            if (!user) {
+                setMessage({ text: 'You must be logged in to save information', type: 'error' });
+                return;
+            }
+
+            const { error } = await supabaseClient
+                .from('profiles')
+                .upsert({
+                    user_id: (await user).data.user?.id,
+                    full_name: formData.fullName,
+                    npm: formData.npm,
+                    date_of_birth: formData.dateOfBirth,
+                    batch: formData.batch,
+                    updated_at: new Date()
+                });
+
+            if (error) throw error;
+
+            setMessage({ text: 'Personal information saved successfully!', type: 'success' });
+        } catch (error) {
+            console.error('Error saving personal information:', error);
+            setMessage({ text: 'Failed to save information. Please try again.', type: 'error' });
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    return (
+        <div className="space-y-6 p-4 max-w-3xl mx-auto">
+            <div className="space-y-2">
+                <h1 className="text-2xl font-bold tracking-tight">Personal Information</h1>
+                <p className="text-gray-500 dark:text-gray-400">
+                    Please provide your personal details for the application process.
+                </p>
+            </div>
+
+            <div className="border-t border-gray-200 dark:border-gray-800 pt-4">
+                <form onSubmit={handleSubmit} className="space-y-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="space-y-2">
+                            <Label htmlFor="fullName">Full Name</Label>
+                            <Input
+                                id="fullName"
+                                name="fullName"
+                                placeholder="Enter your full name"
+                                value={formData.fullName}
+                                onChange={handleChange}
+                                required
+                            />
+                        </div>
+
+                        <div className="space-y-2">
+                            <Label htmlFor="npm">NPM (Student ID)</Label>
+                            <Input
+                                id="npm"
+                                name="npm"
+                                placeholder="Enter your NPM"
+                                value={formData.npm}
+                                onChange={handleChange}
+                                required
+                            />
+                        </div>
+
+                        <div className="space-y-2">
+                            <Label htmlFor="dateOfBirth">Date of Birth</Label>
+                            <Input
+                                id="dateOfBirth"
+                                name="dateOfBirth"
+                                type="date"
+                                value={formData.dateOfBirth}
+                                onChange={handleChange}
+                                required
+                            />
+                        </div>
+
+                        <div className="space-y-2">
+                            <Label htmlFor="batch">Batch</Label>
+                            <Input
+                                id="batch"
+                                name="batch"
+                                placeholder="Enter your batch"
+                                value={formData.batch}
+                                onChange={handleChange}
+                                required
+                            />
+                        </div>
+                    </div>
+
+                    {message.text && (
+                        <div className={`p-3 rounded-md ${message.type === 'success' ? 'bg-green-50 text-green-700 border border-green-200' : 'bg-red-50 text-red-700 border border-red-200'}`}>
+                            {message.text}
+                        </div>
+                    )}
+
+                    <Button type="submit" disabled={loading}>
+                        {loading ? 'Saving...' : 'Save'}
+                    </Button>
+                </form>
+            </div>
+        </div>
+    );
+};
+
+export default PersonalInformation;
