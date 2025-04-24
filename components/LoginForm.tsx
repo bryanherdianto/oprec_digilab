@@ -63,7 +63,7 @@ export default function SignupForm() {
                     </button>
 
                     <p className="mt-2 max-w-sm text-sm text-neutral-600 dark:text-neutral-300">
-                        Don't have an account?{" "}
+                        Don&apos;t have an account?{" "}
                         <Link href="/signup" className="font-semibold text-neutral-800 dark:text-neutral-300 hover:underline">
                             Sign up
                         </Link>

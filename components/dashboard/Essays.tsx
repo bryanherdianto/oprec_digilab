@@ -52,7 +52,7 @@ const Essays = () => {
         // Check minimum word count (100 words per essay)
         const minWordCount = 100;
         const essayBelowMinimum = Object.entries(wordCounts).find(
-            ([key, count]) => count < minWordCount
+            ([, count]) => count < minWordCount
         );
 
         if (essayBelowMinimum) {

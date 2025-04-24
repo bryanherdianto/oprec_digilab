@@ -99,7 +99,7 @@ const ContactsAndFiles = () => {
       const fileName = `${userId}-${Date.now()}.${fileExt}`;
       const filePath = `${folder}/${fileName}`;
       
-      const { error: uploadError, data } = await supabaseClient.storage
+      const { error: uploadError, } = await supabaseClient.storage
         .from('applicant_files')
         .upload(filePath, file);
         
