@@ -6,7 +6,6 @@ import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { resetPassword } from '../backend/googleServices';
 import { motion, AnimatePresence } from "framer-motion";
-import { useRouter } from "next/navigation";
 
 export default function ForgotPassForm() {
     const [emailLoginLoading, setEmailLoginLoading] = useState(false);
@@ -64,7 +63,7 @@ export default function ForgotPassForm() {
                 Reset Your Password
             </h2>
             <p className="mt-2 max-w-sm text-sm text-neutral-600 dark:text-neutral-300">
-                Type in your email and we'll send you a link to reset your password
+                Type in your email and we&apos;ll send you a link to reset your password
             </p>
 
             <form className="my-8" onSubmit={handleSubmit}>

@@ -17,9 +17,19 @@ import Essays from "./dashboard/Essays";
 import { getCurrentUser, signOut } from '../backend/googleServices';
 import { getNullLength } from "@/backend/formServices";
 
+interface UserMetadata {
+  full_name?: string;
+  display_name?: string;
+  avatar_url?: string;
+}
+
+interface User {
+  user_metadata?: UserMetadata;
+}
+
 export function SidebarDashboard() {
   const [activeSection, setActiveSection] = useState("dashboard");
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<User | null>(null);
 
   const links = [
     {
@@ -121,7 +131,7 @@ export function SidebarDashboard() {
           <div>
             <SidebarLink
               link={{
-                label: user?.user_metadata?.full_name || user?.user_metadata?.display_name,
+                label: user?.user_metadata?.full_name || user?.user_metadata?.display_name || '',
                 href: "#",
                 icon: (
                   <img

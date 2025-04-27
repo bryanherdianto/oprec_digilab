@@ -102,7 +102,7 @@ export const FileUpload = ({
       }
       setFile(null);
       setPreview(null);
-      onChange && onChange(null);
+      onChange?.(null);
       return;
     }
 
@@ -123,17 +123,17 @@ export const FileUpload = ({
           setPreview(null);
         }
 
-        onChange && onChange(newFile, outputFilename);
+        onChange?.(newFile, outputFilename);
       } else {
         setFile(null);
         setPreview(null);
-        onChange && onChange(null);
+        onChange?.(null);
       }
     }
 
     // Clear initial file display when new file is uploaded
     setInitialFile(null);
-  }, [onChange, maxSizeMB, acceptedFileTypes, outputFilename]);
+  }, [onChange, maxSizeMB, acceptedFileTypes, outputFilename, validateFile]);
 
   const handleRemoveFile = () => {
     setFile(null);
@@ -145,7 +145,7 @@ export const FileUpload = ({
       fileInputRef.current.value = '';
     }
 
-    onChange && onChange(null);
+    onChange?.(null);
   };
 
   const handleClick = () => {

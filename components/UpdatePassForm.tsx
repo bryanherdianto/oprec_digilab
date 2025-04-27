@@ -2,7 +2,6 @@
 import { useState } from "react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { updatePassword } from '../backend/googleServices';
 import { motion, AnimatePresence } from "framer-motion";
