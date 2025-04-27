@@ -1,9 +1,10 @@
 "use client";
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
-import { supabaseClient } from '@/backend/supabaseClient';
+import { addPersonalInformation, getStatus, getPersonalInfo } from '@/backend/formServices';
+import { getCurrentUser } from '@/backend/googleServices';
 
 interface PersonalInfoData {
     fullName: string;
@@ -22,6 +23,30 @@ const PersonalInformation = () => {
 
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState({ text: '', type: '' });
+    const [isSubmitted, setIsSubmitted] = useState(false);
+
+    useEffect(() => {
+        const fetchStatus = async () => {
+            try {
+                const status = await getStatus();
+                setIsSubmitted(status);
+
+                const personalInfo = await getPersonalInfo();
+                if (personalInfo) {
+                    setFormData({
+                        fullName: personalInfo.nama || '',
+                        npm: personalInfo.npm || '',
+                        dateOfBirth: personalInfo.tanggal_lahir.split('T')[0] || '',
+                        batch: personalInfo.angkatan || ''
+                    });
+                }
+            } catch (error) {
+                console.error("Error fetching submission status:", error);
+            }
+        };
+
+        fetchStatus();
+    }, []);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
@@ -37,25 +62,15 @@ const PersonalInformation = () => {
         setMessage({ text: '', type: '' });
 
         try {
-            const user = supabaseClient.auth.getUser();
+            const user = await getCurrentUser();
 
-            if (!user) {
-                setMessage({ text: 'You must be logged in to save information', type: 'error' });
-                return;
-            }
-
-            const { error } = await supabaseClient
-                .from('profiles')
-                .upsert({
-                    user_id: (await user).data.user?.id,
-                    full_name: formData.fullName,
-                    npm: formData.npm,
-                    date_of_birth: formData.dateOfBirth,
-                    batch: formData.batch,
-                    updated_at: new Date()
-                });
-
-            if (error) throw error;
+            await addPersonalInformation({
+                id: user?.id,
+                nama: formData.fullName,
+                npm: formData.npm,
+                angkatan: formData.batch,
+                tanggal_lahir: formData.dateOfBirth,
+            });
 
             setMessage({ text: 'Personal information saved successfully!', type: 'success' });
         } catch (error) {
@@ -87,6 +102,7 @@ const PersonalInformation = () => {
                                 value={formData.fullName}
                                 onChange={handleChange}
                                 required
+                                disabled={isSubmitted || loading}
                             />
                         </div>
 
@@ -99,6 +115,7 @@ const PersonalInformation = () => {
                                 value={formData.npm}
                                 onChange={handleChange}
                                 required
+                                disabled={isSubmitted || loading}
                             />
                         </div>
 
@@ -111,6 +128,7 @@ const PersonalInformation = () => {
                                 value={formData.dateOfBirth}
                                 onChange={handleChange}
                                 required
+                                disabled={isSubmitted || loading}
                             />
                         </div>
 
@@ -123,6 +141,7 @@ const PersonalInformation = () => {
                                 value={formData.batch}
                                 onChange={handleChange}
                                 required
+                                disabled={isSubmitted || loading}
                             />
                         </div>
                     </div>
@@ -133,7 +152,7 @@ const PersonalInformation = () => {
                         </div>
                     )}
 
-                    <Button type="submit" disabled={loading}>
+                    <Button type="submit" disabled={loading || isSubmitted}>
                         {loading ? 'Saving...' : 'Save'}
                     </Button>
                 </form>

@@ -1,8 +1,9 @@
 "use client";
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
-import { supabaseClient } from '@/backend/supabaseClient';
+import { changeStatus, addEssays, getStatus, getPersonalInfo } from '@/backend/formServices';
+import { getCurrentUser } from '@/backend/googleServices';
 
 interface EssayData {
     motivation: string;
@@ -18,7 +19,6 @@ const Essays = () => {
         contribution: '',
         commitment: ''
     });
-
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState({ text: '', type: '' });
     const [wordCounts, setWordCounts] = useState({
@@ -27,6 +27,30 @@ const Essays = () => {
         contribution: 0,
         commitment: 0
     });
+    const [isSubmitted, setIsSubmitted] = useState(false);
+
+    useEffect(() => {
+        const fetchStatus = async () => {
+            try {
+                const status = await getStatus();
+                setIsSubmitted(status);
+
+                const personalInfo = await getPersonalInfo();
+                if (personalInfo) {
+                    setFormData({
+                        motivation: personalInfo.question_1 || '',
+                        experience: personalInfo.question_2 || '',
+                        contribution: personalInfo.question_3 || '',
+                        commitment: personalInfo.question_4 || ''
+                    });
+                }
+            } catch (error) {
+                console.error("Error fetching submission status:", error);
+            }
+        };
+
+        fetchStatus();
+    }, []);
 
     const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         const { name, value } = e.target;
@@ -65,31 +89,58 @@ const Essays = () => {
         }
 
         try {
-            const user = await supabaseClient.auth.getUser();
-            const userId = user.data.user?.id;
+            const user = await getCurrentUser();
+            const userId = user?.id;
 
             if (!userId) {
                 setMessage({ text: 'You must be logged in to save essays', type: 'error' });
                 return;
             }
 
-            const { error } = await supabaseClient
-                .from('essays')
-                .upsert({
-                    user_id: userId,
-                    motivation_essay: formData.motivation,
-                    experience_essay: formData.experience,
-                    contribution_essay: formData.contribution,
-                    commitment_essay: formData.commitment,
-                    updated_at: new Date()
-                });
-
-            if (error) throw error;
+            await addEssays({
+                id: userId,
+                question_1: formData.motivation,
+                question_2: formData.experience,
+                question_3: formData.contribution,
+                question_4: formData.commitment
+            });
 
             setMessage({ text: 'Essays saved successfully!', type: 'success' });
         } catch (error) {
             console.error('Error saving essays:', error);
             setMessage({ text: 'Failed to save essays. Please try again.', type: 'error' });
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleSubmitApplication = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setLoading(true);
+        setMessage({ text: '', type: '' });
+
+        try {
+            const user = await getCurrentUser();
+            const userId = user?.id;
+
+            if (!userId) {
+                setMessage({ text: 'You must be logged in to submit application', type: 'error' });
+                return;
+            }
+
+            await changeStatus({
+                id: userId,
+                is_submitted: true
+            });
+
+            setMessage({ text: 'Application submitted successfully!', type: 'success' });
+        } catch (error) {
+            console.error('Error submitting application:', error);
+            if (error instanceof Error && error.message.includes("NULL")) {
+                setMessage({ text: 'Failed to submit application. There are still some empty fields.', type: 'error' });
+            } else {
+                setMessage({ text: 'Failed to submit application. Please try again.', type: 'error' });
+            }
         } finally {
             setLoading(false);
         }
@@ -121,6 +172,7 @@ const Essays = () => {
                             placeholder="Describe your motivation for joining the Digital Laboratory..."
                             value={formData.motivation}
                             onChange={handleChange}
+                            disabled={isSubmitted || loading}
                             required
                         />
                         {wordCounts.motivation > 0 && wordCounts.motivation < 100 && (
@@ -145,6 +197,7 @@ const Essays = () => {
                             placeholder="Describe your technical experience..."
                             value={formData.experience}
                             onChange={handleChange}
+                            disabled={isSubmitted || loading}
                             required
                         />
                         {wordCounts.experience > 0 && wordCounts.experience < 100 && (
@@ -169,6 +222,7 @@ const Essays = () => {
                             placeholder="Describe how you can contribute..."
                             value={formData.contribution}
                             onChange={handleChange}
+                            disabled={isSubmitted || loading}
                             required
                         />
                         {wordCounts.contribution > 0 && wordCounts.contribution < 100 && (
@@ -193,6 +247,7 @@ const Essays = () => {
                             placeholder="Describe your commitment plan..."
                             value={formData.commitment}
                             onChange={handleChange}
+                            disabled={isSubmitted || loading}
                             required
                         />
                         {wordCounts.commitment > 0 && wordCounts.commitment < 100 && (
@@ -209,12 +264,12 @@ const Essays = () => {
                     )}
 
                     <div className='flex justify-between'>
-                    <Button type="submit" disabled={loading}>
-                        {loading ? 'Saving...' : 'Save'}
-                    </Button>
-                    <Button variant="outline" type="submit" disabled={loading}>
-                        {loading ? 'Submitting...' : 'Submit Application'}
-                    </Button>
+                        <Button type="submit" disabled={loading || isSubmitted}>
+                            {loading ? 'Saving...' : 'Save'}
+                        </Button>
+                        <Button variant="outline" onClick={handleSubmitApplication} disabled={loading || isSubmitted}>
+                            {loading ? 'Submitting...' : 'Submit Application'}
+                        </Button>
                     </div>
                 </form>
             </div>

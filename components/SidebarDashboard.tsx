@@ -15,8 +15,9 @@ import PersonalInformation from "./dashboard/PersonalInformation";
 import ContactsAndFiles from "./dashboard/ContactsFiles";
 import Essays from "./dashboard/Essays";
 import { getCurrentUser, signOut } from '../backend/googleServices';
+import { getNullLength } from "@/backend/formServices";
 
-export function SidebarDemo() {
+export function SidebarDashboard() {
   const [activeSection, setActiveSection] = useState("dashboard");
   const [user, setUser] = useState<any>(null);
 
@@ -144,15 +145,24 @@ export function SidebarDemo() {
 
 const Dashboard = ({ activeSection }: { activeSection: string }) => {
   const router = useRouter();
+  const [progress, setProgress] = useState(0);
   useEffect(() => {
+    const fetchData = async () => {
+      const nullLength = await getNullLength();
+      setProgress(nullLength);
+    };
+
     if (activeSection === 'logout') {
       const doLogout = async () => {
         await signOut();
         router.push('/login');
       };
       doLogout();
+    } else if (activeSection === 'dashboard') {
+      fetchData();
     }
   }, [activeSection, router]);
+
   const renderSection = () => {
     switch (activeSection) {
       case 'personal':
@@ -171,9 +181,9 @@ const Dashboard = ({ activeSection }: { activeSection: string }) => {
               <div className="mt-4">
                 <h3 className="font-medium">Application Progress</h3>
                 <div className="w-full bg-gray-200 rounded-full h-2.5 mt-2 dark:bg-gray-700">
-                  <div className="bg-blue-600 h-2.5 rounded-full" style={{ width: '45%' }}></div>
+                  <div className="bg-blue-600 h-2.5 rounded-full" style={{ width: `${progress}%` }}></div>
                 </div>
-                <p className="text-sm mt-1">45% Completed</p>
+                <p className="text-sm mt-1">{progress}% Completed</p>
               </div>
             </div>
             <div className="h-full w-full rounded-lg bg-gray-100 dark:bg-neutral-800 p-4 shadow-sm">
