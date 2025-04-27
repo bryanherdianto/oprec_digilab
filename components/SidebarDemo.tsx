@@ -1,5 +1,6 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { Sidebar, SidebarBody, SidebarLink } from "@/components/ui/sidebar";
 import {
   IconArrowLeft,
@@ -8,14 +9,16 @@ import {
   IconFileText,
   IconAddressBook,
 } from "@tabler/icons-react";
-import { motion } from "motion/react";
+import { motion, AnimatePresence } from "motion/react";
 import { cn } from "@/lib/utils";
 import PersonalInformation from "./dashboard/PersonalInformation";
 import ContactsAndFiles from "./dashboard/ContactsFiles";
 import Essays from "./dashboard/Essays";
+import { getCurrentUser, signOut } from '../backend/googleServices';
 
 export function SidebarDemo() {
   const [activeSection, setActiveSection] = useState("dashboard");
+  const [user, setUser] = useState<any>(null);
 
   const links = [
     {
@@ -52,7 +55,7 @@ export function SidebarDemo() {
     },
     {
       label: "Logout",
-      href: "#",
+      href: "",
       icon: (
         <IconArrowLeft className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />
       ),
@@ -65,6 +68,15 @@ export function SidebarDemo() {
     setActiveSection(id);
   };
 
+  useEffect(() => {
+    const fetchUser = async () => {
+      const currentUser = await getCurrentUser();
+      setUser(currentUser);
+    };
+
+    fetchUser();
+  }, []);
+
   return (
     <div
       className={cn(
@@ -75,7 +87,28 @@ export function SidebarDemo() {
       <Sidebar open={open} setOpen={setOpen}>
         <SidebarBody className="justify-between gap-10">
           <div className="flex flex-1 flex-col overflow-x-hidden overflow-y-auto">
-            {open ? <Logo /> : <LogoIcon />}
+            <a
+              href="#"
+              className="relative z-20 flex items-center space-x-2 py-1 text-sm font-normal text-black"
+            >
+              <img src="/Logo.svg" alt="" className="h-7 w-7 shrink-0 object-cover" />
+              <AnimatePresence>
+                {open && (
+                  <motion.span
+                    initial={{ opacity: 0, width: 0 }}
+                    animate={{ opacity: 1, width: "auto" }}
+                    exit={{ opacity: 0, width: 0 }}
+                    transition={{
+                      duration: 0.3,
+                      ease: "easeInOut",
+                    }}
+                    className="font-medium whitespace-pre text-black dark:text-white overflow-hidden"
+                  >
+                    Digital Laboratory
+                  </motion.span>
+                )}
+              </AnimatePresence>
+            </a>
             <div className="mt-8 flex flex-col gap-2">
               {links.map((link, idx) => (
                 <div key={idx} onClick={() => handleLinkClick(link.id)}>
@@ -87,15 +120,16 @@ export function SidebarDemo() {
           <div>
             <SidebarLink
               link={{
-                label: "User Profile",
+                label: user?.user_metadata?.full_name || user?.user_metadata?.display_name,
                 href: "#",
                 icon: (
                   <img
-                    src="https://assets.aceternity.com/manu.png"
+                    src={user?.user_metadata?.avatar_url || "/default-avatar.jpg"}
                     className="h-7 w-7 shrink-0 rounded-full"
                     width={50}
                     height={50}
                     alt="Avatar"
+                    referrerPolicy="no-referrer"
                   />
                 ),
               }}
@@ -108,36 +142,17 @@ export function SidebarDemo() {
   );
 }
 
-export const Logo = () => {
-  return (
-    <a
-      href="#"
-      className="relative z-20 flex items-center space-x-2 py-1 text-sm font-normal text-black"
-    >
-      <img src="/Logo.svg" alt="" className="h-7 w-7 shrink-0 object-cover" />
-      <motion.span
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        className="font-medium whitespace-pre text-black dark:text-white"
-      >
-        Digital Laboratory
-      </motion.span>
-    </a>
-  );
-};
-
-export const LogoIcon = () => {
-  return (
-    <a
-      href="#"
-      className="relative z-20 flex items-center space-x-2 py-1 text-sm font-normal text-black"
-    >
-      <img src="/Logo.svg" alt="" className="h-7 w-7 shrink-0 object-cover" />
-    </a>
-  );
-};
-
 const Dashboard = ({ activeSection }: { activeSection: string }) => {
+  const router = useRouter();
+  useEffect(() => {
+    if (activeSection === 'logout') {
+      const doLogout = async () => {
+        await signOut();
+        router.push('/login');
+      };
+      doLogout();
+    }
+  }, [activeSection, router]);
   const renderSection = () => {
     switch (activeSection) {
       case 'personal':
@@ -158,7 +173,7 @@ const Dashboard = ({ activeSection }: { activeSection: string }) => {
                 <div className="w-full bg-gray-200 rounded-full h-2.5 mt-2 dark:bg-gray-700">
                   <div className="bg-blue-600 h-2.5 rounded-full" style={{ width: '45%' }}></div>
                 </div>
-                <p className="text-sm mt-1">45% Complete</p>
+                <p className="text-sm mt-1">45% Completed</p>
               </div>
             </div>
             <div className="h-full w-full rounded-lg bg-gray-100 dark:bg-neutral-800 p-4 shadow-sm">
@@ -185,7 +200,7 @@ const Dashboard = ({ activeSection }: { activeSection: string }) => {
 
   return (
     <div className="flex flex-1">
-      <div className="flex h-full w-full flex-1 flex-col rounded-tl-2xl border border-neutral-200 bg-white dark:border-neutral-700 dark:bg-neutral-900 overflow-hidden">
+      <div className="flex h-full w-full flex-1 flex-col rounded-tl-2xl border border-neutral-200 bg-white dark:border-neutral-700 dark:bg-black overflow-hidden">
         <div className="p-4 md:p-10 flex-1 overflow-auto">
           {renderSection()}
         </div>

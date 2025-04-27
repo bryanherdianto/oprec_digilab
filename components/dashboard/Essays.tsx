@@ -208,9 +208,14 @@ const Essays = () => {
                         </div>
                     )}
 
+                    <div className='flex justify-between'>
                     <Button type="submit" disabled={loading}>
                         {loading ? 'Saving...' : 'Save'}
                     </Button>
+                    <Button variant="outline" type="submit" disabled={loading}>
+                        {loading ? 'Submitting...' : 'Submit Application'}
+                    </Button>
+                    </div>
                 </form>
             </div>
         </div>
