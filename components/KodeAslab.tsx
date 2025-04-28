@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 const ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".repeat(3).split("");
 const EXTRA_OFFSET = 24;
@@ -89,10 +90,15 @@ function LetterReel({
 export default function KodeAslab() {
     const [cycle, setCycle] = useState(0);
     const [, setShowLines] = useState(false);
+    const router = useRouter();
 
     const leftDirection = cycle % 2 === 0 ? "up" : "down";
     const rightDirection = cycle % 2 === 0 ? "down" : "up";
 
+    const handleClick = (link: string) => {
+        router.push(link);
+    }
+    
     useEffect(() => {
         const cycleLength = 10000;
         const idleDuration = 3000;
@@ -116,7 +122,12 @@ export default function KodeAslab() {
             <p className="text-xl sm:text-4xl md:text-5xl font-mono text-white mr-4 sm:mr-7">What&apos;s your code?</p>
             <LetterReel direction={leftDirection} trigger={cycle} />
             <LetterReel direction={rightDirection} trigger={cycle} />
-            <Button size="lg" className='font-sans text-lg rounded-full absolute bottom-[25vh]' variant='outline'>Join Now</Button>
+            <Button 
+                size="lg" 
+                className='font-sans text-lg rounded-full absolute bottom-[25vh]' 
+                variant='outline'
+                onClick={() => handleClick("/login")}
+            >Join Now</Button>
         </div>
     );
 }

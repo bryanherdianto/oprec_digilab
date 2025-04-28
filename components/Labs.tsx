@@ -1,31 +1,38 @@
 "use client";
 
 import Carousel from "@/components/ui/carousel";
+import DSD from "../public/DSD.jpg";
+import PSD from "../public/PSD.jpg";
+import Progdas from "../public/Progdas.jpg";
+import Proglan from "../public/Proglan.jpg";
+import MBD from "../public/MBD.jpg";
+import IOT from "../public/IOT.jpg";
+
 export function Labs() {
     const slideData = [
         {
             title: "Fundamentals of Digital System",
-            src: "https://images.unsplash.com/photo-1494806812796-244fe51b774d?q=80&w=3534&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+            src: DSD.src,
         },
         {
             title: "Digital System Design",
-            src: "https://images.unsplash.com/photo-1518710843675-2540dd79065c?q=80&w=3387&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+            src: PSD.src,
         },
         {
             title: "Basic Programming",
-            src: "https://images.unsplash.com/photo-1590041794748-2d8eb73a571c?q=80&w=3456&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+            src: Progdas.src,
         },
         {
             title: "Algorithm Programming",
-            src: "https://images.unsplash.com/photo-1679420437432-80cfbf88986c?q=80&w=3540&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+            src: Proglan.src,
         },
         {
-            title: "Embedded System",
-            src: "https://images.unsplash.com/photo-1679420437432-80cfbf88986c?q=80&w=3540&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+            title: "Embedded Systems",
+            src: MBD.src,
         },
         {
             title: "Internet of Things",
-            src: "https://images.unsplash.com/photo-1679420437432-80cfbf88986c?q=80&w=3540&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+            src: IOT.src,
         },
     ];
     return (

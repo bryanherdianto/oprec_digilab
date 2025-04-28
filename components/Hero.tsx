@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { FlipWords } from "../components/ui/flip-words";
 
 function Hero() {
-    const words = ["better", "cute", "lovely", "modern"];
+    const words = ["innovative", "aspirable", "better", "creative", "inspiring"];
 
     // Add state for countdown values
     const [countdown, setCountdown] = useState({
@@ -60,10 +60,13 @@ function Hero() {
                     Become<FlipWords words={words} />
                 </div>
                 <div>
-                    people by joining <span className="font-bold">Digilab</span>
+                    by joining <span className="font-bold">Digilab</span>
                 </div>
             </div>
-            <div className="grid grid-flow-col gap-5 text-center auto-cols-max mt-15">
+            <p className="text-lg font-medium text-neutral-500 dark:text-neutral-400 mt-4">
+                Until May 18th 2025
+            </p>
+            <div className="grid grid-flow-col gap-5 text-center auto-cols-max mt-2">
                 <div className="flex flex-col p-2 bg-neutral rounded-box text-neutral-content">
                     <span className="countdown font-mono text-4xl sm:text-5xl">
                         <span style={{ "--value": countdown.days } as React.CSSProperties} aria-live="polite" aria-label={`${countdown.days} days`}>
@@ -97,6 +100,14 @@ function Hero() {
                     sec
                 </div>
             </div>
+            <a 
+                href="https://drive.google.com/linktian" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="font-sans text-lg rounded-full px-6 py-3 mt-6 bg-transparent border border-white hover:bg-white/10 text-white transition-colors duration-200"
+            >
+                Download Guidebook
+            </a>
         </div>
     )
 }

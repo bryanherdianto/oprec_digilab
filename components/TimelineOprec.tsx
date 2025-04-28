@@ -8,8 +8,7 @@ export function TimlineOprec() {
       content: (
         <div>
           <p className="mb-8 text-md font-normal text-neutral-800 md:text-sm dark:text-neutral-200">
-            Open recruitment starts and we are looking for new members to join our lab.
-            We will also be conducting a screening process for the new members.
+            Open recruitment starts! We will be conducting a screening process for the new candidates.
           </p>
           <div className="grid grid-cols-2 gap-4">
             <img
@@ -63,9 +62,6 @@ export function TimlineOprec() {
               <li className="text-md font-normal text-neutral-800 md:text-sm dark:text-neutral-200">
                 Embedded System
               </li>
-              <li className="text-md font-normal text-neutral-800 md:text-sm dark:text-neutral-200">
-                Interview
-              </li>
             </ul>
           </div>
           <div className="grid grid-cols-2 gap-4">
@@ -102,11 +98,11 @@ export function TimlineOprec() {
       ),
     },
     {
-      title: "June",
+      title: "August",
       content: (
         <div>
           <p className="mb-4 text-md font-normal text-neutral-800 md:text-sm dark:text-neutral-200">
-            Results of the selection process are announced and the new members are invited to join the lab.
+            Results of the selection process are announced, and the new assistans are welcomed to the lab!
           </p>
           <div className="grid grid-cols-2 gap-4">
             <img
