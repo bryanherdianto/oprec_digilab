@@ -64,7 +64,7 @@ function Hero() {
                     people by joining <span className="font-bold">Digilab</span>
                 </div>
             </div>
-            <div className="grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-4 lg:gap-12 mt-20">
+            <div className="grid grid-cols-1 md:grid-cols-[1fr_auto] gap-4 md:gap-12 mt-20">
                 <div className="flex flex-col justify-center items-center">
                     <div>
                         Deadline: <strong>May 9, 2025</strong>

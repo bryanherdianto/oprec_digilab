@@ -5,7 +5,7 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { FileUpload } from "@/components/ui/file-upload";
 import { getCurrentUser } from '@/backend/googleServices';
-import { addContactsFiles, uploadCV, uploadPhoto, getStatus, getUserData, downloadFileFromPublicUrl } from '@/backend/formServices';
+import { addContactsFiles, uploadCV, uploadPhoto } from '@/backend/formServices';
 
 interface data {
   nama: string;
