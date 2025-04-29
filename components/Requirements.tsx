@@ -11,7 +11,7 @@ export function Requirements() {
                     What are the requirements for joining?
                 </h2>
                 <p className="text-neutral-600 text-base sm:text-lg">
-                    Ensure you meet the following criteria to be eligible for joining Digital Laboratory.
+                    Ensure you meet the following criteria to be eligible for joining our Digital Laboratory.
                 </p>
             </div>
             <HoverEffect items={projects} />
@@ -28,7 +28,7 @@ export const projects = [
         description: ""
     },
     {
-        title: "3. Digital System Design and Embedded System score above 80",
+        title: "3. PSD and MBD score above 80",
         description: "*only for 2023 cohort"
-    }
+    },
 ];

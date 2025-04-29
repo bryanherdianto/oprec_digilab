@@ -1,39 +1,33 @@
 "use client";
 
 import Carousel from "@/components/ui/carousel";
-import DSD from "../public/DSD.jpg";
-import PSD from "../public/PSD.jpg";
-import Progdas from "../public/Progdas.jpg";
-import Proglan from "../public/Proglan.jpg";
-import MBD from "../public/MBD.jpg";
-import IOT from "../public/IOT.jpg";
 
 export function Labs() {
     const slideData = [
         {
             title: "Fundamentals of Digital System",
-            src: DSD.src,
+            src: "/DSD.jpg",
         },
         {
             title: "Digital System Design",
-            src: PSD.src,
+            src: "/PSD.jpg",
         },
         {
             title: "Basic Programming",
-            src: Progdas.src,
+            src: "/Progdas.jpg",
         },
         {
             title: "Algorithm Programming",
-            src: Proglan.src,
+            src: "/Proglan.jpg",
         },
         {
             title: "Embedded Systems",
-            src: MBD.src,
+            src: "/MBD.jpg",
         },
         {
             title: "Internet of Things",
-            src: IOT.src,
-        },
+            src: "/IOT.jpg",
+        }
     ];
     return (
         <div className="overflow-hidden w-full min-h-screen py-20">

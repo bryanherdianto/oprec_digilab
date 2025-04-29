@@ -41,7 +41,7 @@ export const Timeline = ({ data }: { data: TimelineEntry[] }) => {
           Timeline of Open Recruitment
         </h2>
         <p className="text-neutral-700 dark:text-neutral-300 text-sm md:text-base max-w-sm">
-          Don't miss it! Digital Laboratory's recruitment starts here.
+          Here is the schedule for the Digital Laboratory open recruitment process.
         </p>
       </div>
 

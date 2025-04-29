@@ -5,7 +5,28 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { FileUpload } from "@/components/ui/file-upload";
 import { getCurrentUser } from '@/backend/googleServices';
-import { addContactsFiles, uploadCV, uploadPhoto, getStatus, getPersonalInfo, downloadFileFromPublicUrl } from '@/backend/formServices';
+import { addContactsFiles, uploadCV, uploadPhoto, getStatus, getUserData, downloadFileFromPublicUrl } from '@/backend/formServices';
+
+interface data {
+  nama: string;
+  npm: string;
+  tanggal_lahir: string;
+  angkatan: string;
+  question_1: string;
+  question_2: string;
+  question_3: string;
+  question_4: string;
+  phone: string;
+  address: string;
+  discord_username: string;
+  ig_username: string;
+  line_username: string;
+  cvFile: File | null;
+  photoFile: File | null;
+  cv_url?: string;
+  foto_url?: string;
+  is_submitted: boolean;
+}
 
 interface ContactFilesData {
   phone: string;
@@ -19,7 +40,7 @@ interface ContactFilesData {
   photoUrl?: string;
 }
 
-const ContactsAndFiles = () => {
+const ContactsFiles = ({ data }: { data: data }) => {
   const [formData, setFormData] = useState<ContactFilesData>({
     phone: '',
     address: '',
@@ -34,33 +55,19 @@ const ContactsAndFiles = () => {
   const [isSubmitted, setIsSubmitted] = useState(false);
 
   useEffect(() => {
-    const fetchStatus = async () => {
-      try {
-        const status = await getStatus();
-        setIsSubmitted(status);
+    setIsSubmitted(data.is_submitted);
 
-        const personalInfo = await getPersonalInfo();
-        const cvFile = personalInfo.cv_url ? await downloadFileFromPublicUrl(personalInfo.cv_url) : null;
-        const photoFile = personalInfo.foto_url ? await downloadFileFromPublicUrl(personalInfo.foto_url) : null;
-        if (personalInfo) {
-          setFormData({
-            phone: personalInfo.phone || '',
-            address: personalInfo.address || '',
-            discord_username: personalInfo.discord_username || '',
-            ig_username: personalInfo.ig_username || '',
-            line_username: personalInfo.line_username || '',
-            cvFile: cvFile,
-            photoFile: photoFile,
-            cvUrl: personalInfo.cv_url,
-            photoUrl: personalInfo.foto_url,
-          });
-        }
-      } catch (error) {
-        console.error("Error fetching submission status:", error);
-      }
-    };
-
-    fetchStatus();
+    setFormData({
+      phone: data.phone || '',
+      address: data.address || '',
+      discord_username: data.discord_username || '',
+      ig_username: data.ig_username || '',
+      line_username: data.line_username || '',
+      cvFile: data.cvFile || null,
+      photoFile: data.photoFile || null,
+      cvUrl: data.cv_url || '',
+      photoUrl: data.foto_url || '',
+    });
   }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -248,4 +255,4 @@ const ContactsAndFiles = () => {
   );
 };
 
-export default ContactsAndFiles;
+export default ContactsFiles;

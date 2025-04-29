@@ -1,6 +1,5 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
 import { Sidebar, SidebarBody, SidebarLink } from "@/components/ui/sidebar";
 import {
   IconArrowLeft,
@@ -12,10 +11,9 @@ import {
 import { motion, AnimatePresence } from "motion/react";
 import { cn } from "@/lib/utils";
 import PersonalInformation from "./dashboard/PersonalInformation";
-import ContactsAndFiles from "./dashboard/ContactsFiles";
+import ContactsFiles from "./dashboard/ContactsFiles";
 import Essays from "./dashboard/Essays";
-import { getCurrentUser, signOut } from '../backend/googleServices';
-import { getNullLength } from "@/backend/formServices";
+import { signOut } from "@/backend/googleServices";
 
 interface UserMetadata {
   full_name?: string;
@@ -26,10 +24,29 @@ interface UserMetadata {
 interface User {
   user_metadata?: UserMetadata;
 }
+interface data {
+  nama: string;
+  npm: string;
+  tanggal_lahir: string;
+  angkatan: string;
+  question_1: string;
+  question_2: string;
+  question_3: string;
+  question_4: string;
+  phone: string;
+  address: string;
+  discord_username: string;
+  ig_username: string;
+  line_username: string;
+  cvFile: File | null;
+  photoFile: File | null;
+  cv_url?: string;
+  foto_url?: string;
+  is_submitted: boolean;
+}
 
-export function SidebarDashboard() {
+export function SidebarDashboard({ user, progress, data }: { user: User | null; progress: number; data: data }) {
   const [activeSection, setActiveSection] = useState("dashboard");
-  const [user, setUser] = useState<User | null>(null);
 
   const links = [
     {
@@ -78,15 +95,6 @@ export function SidebarDashboard() {
   const handleLinkClick = (id: React.SetStateAction<string>) => {
     setActiveSection(id);
   };
-
-  useEffect(() => {
-    const fetchUser = async () => {
-      const currentUser = await getCurrentUser();
-      setUser(currentUser);
-    };
-
-    fetchUser();
-  }, []);
 
   return (
     <div
@@ -148,39 +156,29 @@ export function SidebarDashboard() {
           </div>
         </SidebarBody>
       </Sidebar>
-      <Dashboard activeSection={activeSection} />
+      <Dashboard activeSection={activeSection} progress={progress} data={data} />
     </div>
   );
 }
 
-const Dashboard = ({ activeSection }: { activeSection: string }) => {
-  const router = useRouter();
-  const [progress, setProgress] = useState(0);
+const Dashboard = ({ activeSection, progress, data }: { activeSection: string; progress: number; data: data }) => {
   useEffect(() => {
-    const fetchData = async () => {
-      const nullLength = await getNullLength();
-      setProgress(nullLength);
-    };
-
-    if (activeSection === 'logout') {
-      const doLogout = async () => {
+    async function handleSignOut() {
+      if (activeSection === 'logout') {
         await signOut();
-        router.push('/login');
-      };
-      doLogout();
-    } else if (activeSection === 'dashboard') {
-      fetchData();
+      }
     }
-  }, [activeSection, router]);
 
+    handleSignOut();
+  }, [activeSection]);
   const renderSection = () => {
     switch (activeSection) {
       case 'personal':
-        return <PersonalInformation />;
+        return <PersonalInformation data={data} />;
       case 'contacts':
-        return <ContactsAndFiles />;
+        return <ContactsFiles data={data} />;
       case 'essays':
-        return <Essays />;
+        return <Essays data={data} />;
       default:
         return (
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 h-[70%]">

@@ -2,8 +2,29 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
-import { changeStatus, addEssays, getStatus, getPersonalInfo } from '@/backend/formServices';
+import { changeStatus, addEssays, getStatus, getUserData } from '@/backend/formServices';
 import { getCurrentUser } from '@/backend/googleServices';
+
+interface data {
+    nama: string;
+    npm: string;
+    tanggal_lahir: string;
+    angkatan: string;
+    question_1: string;
+    question_2: string;
+    question_3: string;
+    question_4: string;
+    phone: string;
+    address: string;
+    discord_username: string;
+    ig_username: string;
+    line_username: string;
+    cvFile: File | null;
+    photoFile: File | null;
+    cv_url?: string;
+    foto_url?: string;
+    is_submitted: boolean;
+}
 
 interface EssayData {
     motivation: string;
@@ -12,7 +33,7 @@ interface EssayData {
     commitment: string;
 }
 
-const Essays = () => {
+const Essays = ({ data }: { data: data }) => {
     const [formData, setFormData] = useState<EssayData>({
         motivation: '',
         experience: '',
@@ -30,26 +51,13 @@ const Essays = () => {
     const [isSubmitted, setIsSubmitted] = useState(false);
 
     useEffect(() => {
-        const fetchStatus = async () => {
-            try {
-                const status = await getStatus();
-                setIsSubmitted(status);
-
-                const personalInfo = await getPersonalInfo();
-                if (personalInfo) {
-                    setFormData({
-                        motivation: personalInfo.question_1 || '',
-                        experience: personalInfo.question_2 || '',
-                        contribution: personalInfo.question_3 || '',
-                        commitment: personalInfo.question_4 || ''
-                    });
-                }
-            } catch (error) {
-                console.error("Error fetching submission status:", error);
-            }
-        };
-
-        fetchStatus();
+        setIsSubmitted(data.is_submitted);
+        setFormData({
+            motivation: data.question_1 || '',
+            experience: data.question_2 || '',
+            contribution: data.question_3 || '',
+            commitment: data.question_4 || ''
+        });
     }, []);
 
     const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {

@@ -1,6 +1,7 @@
-import { supabaseClient } from './supabaseClient';
+import { createClient } from './supabaseClient';
 import bcryptjs from 'bcryptjs';
 
+const supabaseClient = createClient();
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const PASSWORD_REGEX = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*#?&]{8,}$/;
 
@@ -106,7 +107,6 @@ export const signOut = async () => {
 export const getCurrentUser = async () => {
     try {
         const { data: { user } } = await supabaseClient.auth.getUser();
-        console.log(user);
         return user;
     } catch (error) {
         console.error('Error fetching current user:', error);

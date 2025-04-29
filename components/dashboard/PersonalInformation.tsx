@@ -3,8 +3,29 @@ import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
-import { addPersonalInformation, getStatus, getPersonalInfo } from '@/backend/formServices';
+import { addPersonalInformation } from '@/backend/formServices';
 import { getCurrentUser } from '@/backend/googleServices';
+
+interface data {
+    nama: string;
+    npm: string;
+    tanggal_lahir: string;
+    angkatan: string;
+    question_1: string;
+    question_2: string;
+    question_3: string;
+    question_4: string;
+    phone: string;
+    address: string;
+    discord_username: string;
+    ig_username: string;
+    line_username: string;
+    cvFile: File | null;
+    photoFile: File | null;
+    cv_url?: string;
+    foto_url?: string;
+    is_submitted: boolean;
+}
 
 interface PersonalInfoData {
     fullName: string;
@@ -13,7 +34,7 @@ interface PersonalInfoData {
     batch: string;
 }
 
-const PersonalInformation = () => {
+const PersonalInformation = ({ data }: { data: data }) => {
     const [formData, setFormData] = useState<PersonalInfoData>({
         fullName: '',
         npm: '',
@@ -26,27 +47,15 @@ const PersonalInformation = () => {
     const [isSubmitted, setIsSubmitted] = useState(false);
 
     useEffect(() => {
-        const fetchStatus = async () => {
-            try {
-                const status = await getStatus();
-                setIsSubmitted(status);
+        setFormData({
+            fullName: data.nama || '',
+            npm: data.npm || '',
+            dateOfBirth: data.tanggal_lahir.split('T')[0] || '',
+            batch: data.angkatan || ''
+        });
 
-                const personalInfo = await getPersonalInfo();
-                if (personalInfo) {
-                    setFormData({
-                        fullName: personalInfo.nama || '',
-                        npm: personalInfo.npm || '',
-                        dateOfBirth: personalInfo.tanggal_lahir.split('T')[0] || '',
-                        batch: personalInfo.angkatan || ''
-                    });
-                }
-            } catch (error) {
-                console.error("Error fetching submission status:", error);
-            }
-        };
-
-        fetchStatus();
-    }, []);
+        setIsSubmitted(data.is_submitted);
+    }, [data]);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;

@@ -1,4 +1,17 @@
-import { supabaseClient } from './supabaseClient';
+'use server';
+
+import { createClient } from "./supabaseServer";
+
+export const getCurrentUser = async () => {
+  try {
+    const supabaseClient = await createClient();
+    const { data: { user } } = await supabaseClient.auth.getUser();
+    return user;
+  } catch (error) {
+    console.error('Error fetching current user:', error);
+    return null;
+  }
+};
 
 export const uploadFile = async (file, bucketName) => {
   try {
@@ -192,6 +205,7 @@ export const getStatus = async () => {
 
 export const getNullLength = async () => {
   try {
+    const supabaseClient = await createClient();
     const { data: { user: authUser }, error: authError } = await supabaseClient.auth.getUser();
     if (authError || !authUser) {
       throw new Error('User is not authenticated.');
@@ -224,8 +238,9 @@ export const getNullLength = async () => {
   }
 };
 
-export const getPersonalInfo = async () => {
+export const getUserData = async () => {
   try {
+    const supabaseClient = await createClient();
     const { data: { user: authUser }, error: authError } = await supabaseClient.auth.getUser();
     if (authError || !authUser) {
       throw new Error('User is not authenticated.');
