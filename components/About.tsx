@@ -15,7 +15,7 @@ function About() {
                 empowering students with hands-on experience and collaborative learning to shape the future of technology.
             </p>
             <div className="mt-8 w-full aspect-video">
-                <div className="h-full w-full bg-[url('https://images.unsplash.com/photo-1590041794748-2d8eb73a571c?q=80&w=3456&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')] bg-cover bg-center mask-contain mask-[url('/scribble.png')]"></div>
+                <div className="h-full w-full bg-[url('/about_digilab.jpg')] bg-cover bg-center mask-contain mask-[url('/scribble.png')]"></div>
             </div>
         </div>
     )
