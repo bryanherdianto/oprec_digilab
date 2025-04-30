@@ -13,30 +13,6 @@ export const getCurrentUser = async () => {
   }
 };
 
-export const deleteFileFromStorage = async (bucketName, filePath) => {
-  try {
-    const supabaseClient = await createClient();
-    const { error } = await supabaseClient.storage.from(bucketName).remove([filePath]);
-
-    if (error) {
-      throw new Error(`Failed to delete file: ${error.message}`);
-    }
-
-    console.log('File deleted successfully from storage');
-  } catch (error) {
-    console.error('Error deleting file:', error);
-    throw error;
-  }
-};
-
-export const deleteCVFromStorage = async (filePath) => {
-  return deleteFileFromStorage('cv-files', filePath);
-};
-
-export const deletePhotoFromStorage = async (filePath) => {
-  return deleteFileFromStorage('profile-photos', filePath);
-};
-
 export const uploadFile = async (file, bucketName) => {
   try {
     const supabaseClient = await createClient();

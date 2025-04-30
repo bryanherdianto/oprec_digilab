@@ -1,10 +1,9 @@
 import { cn } from "@/lib/utils";
 import React, { useRef, useState, useCallback, useEffect } from "react"; // Added useEffect
 import { motion } from "motion/react";
-import { IconUpload, IconX, IconFile, IconPhoto, IconFileText } from "@tabler/icons-react";
+import { IconUpload, IconFile, IconPhoto, IconFileText } from "@tabler/icons-react";
 import { useDropzone, FileRejection, Accept } from "react-dropzone";
 import Image from "next/image";
-import { deleteCVFromStorage, deletePhotoFromStorage } from "@/backend/formServices";
 
 const mainVariant = {
   initial: {
