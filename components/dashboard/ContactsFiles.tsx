@@ -55,18 +55,18 @@ const ContactsFiles = ({ data }: { data: data }) => {
   const [isSubmitted, setIsSubmitted] = useState(false);
 
   useEffect(() => {
-    setIsSubmitted(data.is_submitted);
+    setIsSubmitted(data?.is_submitted);
 
     setFormData({
-      phone: data.phone || '',
-      address: data.address || '',
-      discord_username: data.discord_username || '',
-      ig_username: data.ig_username || '',
-      line_username: data.line_username || '',
-      cvFile: data.cvFile || null,
-      photoFile: data.photoFile || null,
-      cvUrl: data.cv_url || '',
-      photoUrl: data.foto_url || '',
+      phone: data?.phone || '',
+      address: data?.address || '',
+      discord_username: data?.discord_username || '',
+      ig_username: data?.ig_username || '',
+      line_username: data?.line_username || '',
+      cvFile: data?.cvFile || null,
+      photoFile: data?.photoFile || null,
+      cvUrl: data?.cv_url || '',
+      photoUrl: data?.foto_url || '',
     });
   }, []);
 

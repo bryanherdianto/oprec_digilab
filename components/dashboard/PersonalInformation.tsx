@@ -48,13 +48,13 @@ const PersonalInformation = ({ data }: { data: data }) => {
 
     useEffect(() => {
         setFormData({
-            fullName: data.nama || '',
-            npm: data.npm || '',
-            dateOfBirth: data.tanggal_lahir.split('T')[0] || '',
-            batch: data.angkatan || ''
+            fullName: data?.nama || '',
+            npm: data?.npm || '',
+            dateOfBirth: data?.tanggal_lahir.split('T')[0] || '',
+            batch: data?.angkatan || ''
         });
 
-        setIsSubmitted(data.is_submitted);
+        setIsSubmitted(data?.is_submitted);
     }, [data]);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {

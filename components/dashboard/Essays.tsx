@@ -51,12 +51,12 @@ const Essays = ({ data }: { data: data }) => {
     const [isSubmitted, setIsSubmitted] = useState(false);
 
     useEffect(() => {
-        setIsSubmitted(data.is_submitted);
+        setIsSubmitted(data?.is_submitted);
         setFormData({
-            motivation: data.question_1 || '',
-            experience: data.question_2 || '',
-            contribution: data.question_3 || '',
-            commitment: data.question_4 || ''
+            motivation: data?.question_1 || '',
+            experience: data?.question_2 || '',
+            contribution: data?.question_3 || '',
+            commitment: data?.question_4 || ''
         });
     }, []);
 

@@ -217,7 +217,11 @@ export const getNullLength = async () => {
       .from('applicants')
       .select('*')
       .eq('id', userId)
-      .single();
+      .maybeSingle();
+
+    if (!applicantData && !fetchError) {
+      return 0;
+    }
 
     if (fetchError) {
       console.error('Error fetching user data:', fetchError);
@@ -252,11 +256,15 @@ export const getUserData = async () => {
       .from('applicants')
       .select('*')
       .eq('id', userId)
-      .single();
+      .maybeSingle();
 
     if (error) {
-      console.error('Error fetching user data:', fetchError);
-      throw new Error(`Failed to fetch user data: ${fetchError.message}`);
+      console.error('Error fetching user data:', error);
+      throw new Error(`Failed to fetch user data: ${error.message}`);
+    }
+
+    if (!data) {
+      return null;
     }
 
     return data;

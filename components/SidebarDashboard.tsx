@@ -14,6 +14,7 @@ import PersonalInformation from "./dashboard/PersonalInformation";
 import ContactsFiles from "./dashboard/ContactsFiles";
 import Essays from "./dashboard/Essays";
 import { signOut } from "@/backend/googleServices";
+import { redirect } from "next/navigation";
 
 interface UserMetadata {
   full_name?: string;
@@ -166,6 +167,7 @@ const Dashboard = ({ activeSection, progress, data }: { activeSection: string; p
     async function handleSignOut() {
       if (activeSection === 'logout') {
         await signOut();
+        redirect("/login");
       }
     }
 
