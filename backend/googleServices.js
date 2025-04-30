@@ -10,9 +10,9 @@ export const signInWithGoogle = async () => {
         const { error } = await supabaseClient.auth.signInWithOAuth({
             provider: 'google',
             options: {
-                redirectTo: `${window.location.origin}/registration`
-            }
-        });
+              redirectTo: `${window.location.origin}/auth/callback`,
+            },
+          })
 
         if (error) {
             throw error;
@@ -39,7 +39,7 @@ export const signUpWithEmail = async (email, password, firstName = '', lastName 
             email,
             password,
             options: {
-                emailRedirectTo: `${window.location.origin}/registration`,
+                emailRedirectTo: `${window.location.origin}/auth/callback`,
                 data: {
                     display_name: displayName,
                 }
@@ -111,66 +111,5 @@ export const getCurrentUser = async () => {
     } catch (error) {
         console.error('Error fetching current user:', error);
         return null;
-    }
-};
-
-export const resetPassword = async (email) => {
-    try {
-        const { data, error } = await supabaseClient.auth.resetPasswordForEmail(email,
-            {
-                redirectTo: `${window.location.origin}/update-password`,
-            });
-
-        if (error) {
-            if (error.message.includes('email rate limit exceeded')) {
-                throw new Error('Rate limit exceeded. Please try again later.');
-            }
-            throw error;
-        }
-
-        return data;
-    } catch (error) {
-        console.error('Error requesting password reset:', error);
-        throw error;
-    }
-};
-
-export const updatePassword = async (newPassword) => {
-    try {
-        if (!PASSWORD_REGEX.test(newPassword)) {
-            throw new Error('Password must be at least 8 characters and include a letter and a number');
-        }
-
-        const { data: authData, error: authError } = await supabaseClient.auth.updateUser({
-            password: newPassword
-        });
-
-        if (authError) {
-            throw authError;
-        }
-
-        if (authData.user) {
-            const hashedPassword = await bcryptjs.hash(newPassword, 10);
-
-            const userId = authData.user.id;
-
-            try {
-                const { error: dbError } = await supabaseClient
-                    .from('email_users')
-                    .update({ password_hash: hashedPassword })
-                    .eq('id', userId);
-
-                if (dbError) {
-                    console.error('Error updating password hash:', dbError);
-                }
-            } catch (dbError) {
-                console.warn('Could not update password hash in custom table:', dbError);
-            }
-        }
-
-        return true;
-    } catch (error) {
-        console.error('Error updating password:', error);
-        throw error;
     }
 };

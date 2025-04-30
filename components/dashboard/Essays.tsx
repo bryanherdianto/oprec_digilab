@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { changeStatus, addEssays } from '@/backend/formServices';
 import { getCurrentUser } from '@/backend/googleServices';
+import { redirect } from 'next/navigation';
 
 interface data {
     nama: string;
@@ -142,6 +143,9 @@ const Essays = ({ data }: { data: data }) => {
             });
 
             setMessage({ text: 'Application submitted successfully!', type: 'success' });
+            setTimeout(() => {
+                redirect('/dashboard');
+            }, 1000);
         } catch (error) {
             console.error('Error submitting application:', error);
             if (error instanceof Error && error.message.includes("NULL")) {

@@ -15,6 +15,7 @@ import ContactsFiles from "./dashboard/ContactsFiles";
 import Essays from "./dashboard/Essays";
 import { signOut } from "@/backend/googleServices";
 import { redirect } from "next/navigation";
+import Link from "next/link";
 
 interface UserMetadata {
   full_name?: string;
@@ -107,8 +108,8 @@ export function SidebarDashboard({ user, progress, data }: { user: User | null; 
       <Sidebar open={open} setOpen={setOpen}>
         <SidebarBody className="justify-between gap-10">
           <div className="flex flex-1 flex-col overflow-x-hidden overflow-y-auto">
-            <a
-              href="#"
+            <Link
+              href="/"
               className="relative z-20 flex items-center space-x-2 py-1 text-sm font-normal text-black"
             >
               <img src="/Logo.svg" alt="" className="h-7 w-7 shrink-0 object-cover" />
@@ -128,7 +129,7 @@ export function SidebarDashboard({ user, progress, data }: { user: User | null; 
                   </motion.span>
                 )}
               </AnimatePresence>
-            </a>
+            </Link>
             <div className="mt-8 flex flex-col gap-2">
               {links.map((link, idx) => (
                 <div key={idx} onClick={() => handleLinkClick(link.id)}>
@@ -195,21 +196,39 @@ const Dashboard = ({ activeSection, progress, data }: { activeSection: string; p
                 </div>
                 <p className="text-sm mt-1">{progress}% Completed</p>
               </div>
+              {data?.is_submitted && (
+                <>
+                  <div className="mt-4 hidden flex-col items-center lg:flex">
+                    <img src="/group_line.jpg" alt="LINE Group QR Code" className="h-64 w-64 rounded-lg shadow-md" />
+                    <h3 className="mt-2 font-medium">Join our LINE Group!!</h3>
+                  </div>
+                  <div className="mt-4 flex flex-col items-center lg:hidden">
+                    <a
+                      href="https://line.me/ti/g/gnEEFqdKqX"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="rounded-lg bg-green-500 px-4 py-2 font-medium text-white shadow-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-75"
+                    >
+                      Join LINE Group
+                    </a>
+                  </div>
+                </>
+              )}
             </div>
             <div className="h-full w-full rounded-lg bg-gray-100 dark:bg-neutral-800 p-4 shadow-sm">
               <h2 className="text-xl font-bold mb-4">Recent Announcements</h2>
               <div className="space-y-4">
                 <div className="border-b pb-2">
                   <h3 className="font-medium">Application Deadline</h3>
-                  <p className="text-sm text-gray-500">April 30, 2025</p>
+                  <p className="text-sm text-gray-500">May 9, 2025</p>
                 </div>
                 <div className="border-b pb-2">
                   <h3 className="font-medium">Interview Schedule</h3>
-                  <p className="text-sm text-gray-500">May 5-10, 2025</p>
+                  <p className="text-sm text-gray-500">May 14-21, 2025</p>
                 </div>
                 <div>
                   <h3 className="font-medium">Results Announcement</h3>
-                  <p className="text-sm text-gray-500">May 20, 2025</p>
+                  <p className="text-sm text-gray-500">August 11, 2025</p>
                 </div>
               </div>
             </div>

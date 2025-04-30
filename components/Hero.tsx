@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from 'react';
 import { FlipWords } from "../components/ui/flip-words";
-import { Button } from './ui/button';
 
 function Hero() {
     const words = ["better", "inspiring", "modern"];
@@ -64,71 +63,61 @@ function Hero() {
                     people by joining <span className="font-bold">Digilab</span>
                 </div>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-[1fr_auto] gap-4 md:gap-12 mt-20">
-                <div className="flex flex-col justify-center items-center">
-                    <div>
-                        Deadline: <strong>May 9, 2025</strong>
-                    </div>
-                    <div className="grid grid-flow-col gap-5 text-center auto-cols-max">
-                        <div className="flex flex-col p-2 bg-neutral rounded-box text-neutral-content">
-                            <span className="countdown font-mono text-4xl sm:text-5xl">
-                                <span
-                                    style={{ "--value": countdown.days } as React.CSSProperties}
-                                    aria-live="polite"
-                                    aria-label={`${countdown.days} days`}
-                                >
-                                    {formatTwoDigits(countdown.days)}
-                                </span>
-                            </span>
-                            days
-                        </div>
-                        <div className="flex flex-col p-2 bg-neutral rounded-box text-neutral-content">
-                            <span className="countdown font-mono text-4xl sm:text-5xl">
-                                <span
-                                    style={{ "--value": countdown.hours } as React.CSSProperties}
-                                    aria-live="polite"
-                                    aria-label={`${countdown.hours} hours`}
-                                >
-                                    {formatTwoDigits(countdown.hours)}
-                                </span>
-                            </span>
-                            hours
-                        </div>
-                        <div className="flex flex-col p-2 bg-neutral rounded-box text-neutral-content">
-                            <span className="countdown font-mono text-4xl sm:text-5xl">
-                                <span
-                                    style={{ "--value": countdown.minutes } as React.CSSProperties}
-                                    aria-live="polite"
-                                    aria-label={`${countdown.minutes} minutes`}
-                                >
-                                    {formatTwoDigits(countdown.minutes)}
-                                </span>
-                            </span>
-                            min
-                        </div>
-                        <div className="flex flex-col p-2 bg-neutral rounded-box text-neutral-content">
-                            <span className="countdown font-mono text-4xl sm:text-5xl">
-                                <span
-                                    style={{ "--value": countdown.seconds } as React.CSSProperties}
-                                    aria-live="polite"
-                                    aria-label={`${countdown.seconds} seconds`}
-                                >
-                                    {formatTwoDigits(countdown.seconds)}
-                                </span>
-                            </span>
-                            sec
-                        </div>
-                    </div>
+            <div className="flex flex-col justify-center items-center mt-20">
+                <div>
+                    Deadline: <strong>May 9, 2025</strong>
                 </div>
-                <div className="flex justify-center items-center px-0">
-                    <a>
-                        <Button size="lg" className="font-sans text-lg rounded-md" variant="outline">
-                            View Booklet →
-                        </Button>
-                    </a>
+                <div className="grid grid-flow-col gap-5 text-center auto-cols-max">
+                    <div className="flex flex-col p-2 bg-neutral rounded-box text-neutral-content">
+                        <span className="countdown font-mono text-4xl sm:text-5xl">
+                            <span
+                                style={{ "--value": countdown.days } as React.CSSProperties}
+                                aria-live="polite"
+                                aria-label={`${countdown.days} days`}
+                            >
+                                {formatTwoDigits(countdown.days)}
+                            </span>
+                        </span>
+                        days
+                    </div>
+                    <div className="flex flex-col p-2 bg-neutral rounded-box text-neutral-content">
+                        <span className="countdown font-mono text-4xl sm:text-5xl">
+                            <span
+                                style={{ "--value": countdown.hours } as React.CSSProperties}
+                                aria-live="polite"
+                                aria-label={`${countdown.hours} hours`}
+                            >
+                                {formatTwoDigits(countdown.hours)}
+                            </span>
+                        </span>
+                        hours
+                    </div>
+                    <div className="flex flex-col p-2 bg-neutral rounded-box text-neutral-content">
+                        <span className="countdown font-mono text-4xl sm:text-5xl">
+                            <span
+                                style={{ "--value": countdown.minutes } as React.CSSProperties}
+                                aria-live="polite"
+                                aria-label={`${countdown.minutes} minutes`}
+                            >
+                                {formatTwoDigits(countdown.minutes)}
+                            </span>
+                        </span>
+                        min
+                    </div>
+                    <div className="flex flex-col p-2 bg-neutral rounded-box text-neutral-content">
+                        <span className="countdown font-mono text-4xl sm:text-5xl">
+                            <span
+                                style={{ "--value": countdown.seconds } as React.CSSProperties}
+                                aria-live="polite"
+                                aria-label={`${countdown.seconds} seconds`}
+                            >
+                                {formatTwoDigits(countdown.seconds)}
+                            </span>
+                        </span>
+                        sec
+                    </div>
                 </div>
             </div>
-
         </div>
     )
 }
