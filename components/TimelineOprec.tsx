@@ -37,6 +37,7 @@ export function TimlineOprec() {
                 Assembly
               </li>
             </ul>
+            All of the tests are conducted online.
           </div>
             <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
             <img

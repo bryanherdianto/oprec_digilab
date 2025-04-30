@@ -92,8 +92,8 @@ const Essays = ({ data }: { data: data }) => {
         setLoading(true);
         setMessage({ text: '', type: '' });
 
-        // Check minimum word count (100 words per essay)
-        const minWordCount = 100;
+        // Check minimum word count (50 words per essay)
+        const minWordCount = 50;
         const essayBelowMinimum = Object.entries(wordCounts).find(
             ([, count]) => count < minWordCount
         );
@@ -173,7 +173,7 @@ const Essays = ({ data }: { data: data }) => {
             <div className="space-y-2">
                 <h1 className="text-2xl font-bold tracking-tight">Application Essays</h1>
                 <p className="text-gray-500 dark:text-gray-400">
-                    Please write thoughtful responses to the following questions. Each essay should be at least 100 words.
+                    Mohon tulis jawaban yang lengkap untuk pertanyaan-pertanyaan berikut. Setiap esai minimal harus 50 kata.
                 </p>
             </div>
 
@@ -181,9 +181,9 @@ const Essays = ({ data }: { data: data }) => {
                 <form onSubmit={handleSubmit} className="space-y-8">
                     <div className="space-y-2">
                         <Label htmlFor="motivation" className="text-lg font-medium">
-                            Why do you want to join the Digital Laboratory?
+                            Mengapa kamu ingin bergabung dengan Digital Laboratory?
                             <span className="ml-2 text-sm text-gray-500">
-                                ({wordCounts.motivation} words, minimum 100)
+                                ({wordCounts.motivation} kata, minimal 50)
                             </span>
                         </Label>
                         <textarea
@@ -191,24 +191,24 @@ const Essays = ({ data }: { data: data }) => {
                             name="motivation"
                             rows={5}
                             className="w-full p-2 border rounded-md bg-transparent"
-                            placeholder="Describe your motivation for joining the Digital Laboratory..."
+                            placeholder="Jelaskan motivasi kamu untuk bergabung dengan Digital Laboratory..."
                             value={formData.motivation}
                             onChange={handleChange}
                             disabled={isSubmitted || loading}
                             required
                         />
-                        {wordCounts.motivation > 0 && wordCounts.motivation < 100 && (
+                        {wordCounts.motivation > 0 && wordCounts.motivation < 50 && (
                             <p className="text-amber-500 text-sm">
-                                Please write at least 100 words ({100 - wordCounts.motivation} more words needed).
+                                Mohon tulis minimal 50 kata ({50 - wordCounts.motivation} kata lagi).
                             </p>
                         )}
                     </div>
 
                     <div className="space-y-2">
                         <Label htmlFor="experience" className="text-lg font-medium">
-                            Describe your relevant experience in programming or digital technology.
+                            Jelaskan pengalaman relevan kamu dalam pemrograman atau teknologi digital.
                             <span className="ml-2 text-sm text-gray-500">
-                                ({wordCounts.experience} words, minimum 100)
+                                ({wordCounts.experience} kata, minimal 50)
                             </span>
                         </Label>
                         <textarea
@@ -216,24 +216,24 @@ const Essays = ({ data }: { data: data }) => {
                             name="experience"
                             rows={5}
                             className="w-full p-2 border rounded-md bg-transparent"
-                            placeholder="Describe your technical experience..."
+                            placeholder="Jelaskan pengalaman teknis kamu..."
                             value={formData.experience}
                             onChange={handleChange}
                             disabled={isSubmitted || loading}
                             required
                         />
-                        {wordCounts.experience > 0 && wordCounts.experience < 100 && (
+                        {wordCounts.experience > 0 && wordCounts.experience < 50 && (
                             <p className="text-amber-500 text-sm">
-                                Please write at least 100 words ({100 - wordCounts.experience} more words needed).
+                                Mohon tulis minimal 50 kata ({50 - wordCounts.experience} kata lagi).
                             </p>
                         )}
                     </div>
 
                     <div className="space-y-2">
                         <Label htmlFor="contribution" className="text-lg font-medium">
-                            How do you think you can contribute to the Digital Laboratory?
+                            Menurut kamu, bagaimana cara untuk berkontribusi pada Laboratorium Digital?
                             <span className="ml-2 text-sm text-gray-500">
-                                ({wordCounts.contribution} words, minimum 100)
+                                ({wordCounts.contribution} kata, minimal 50)
                             </span>
                         </Label>
                         <textarea
@@ -241,24 +241,24 @@ const Essays = ({ data }: { data: data }) => {
                             name="contribution"
                             rows={5}
                             className="w-full p-2 border rounded-md bg-transparent"
-                            placeholder="Describe how you can contribute..."
+                            placeholder="Jelaskan bagaimana kamu dapat berkontribusi..."
                             value={formData.contribution}
                             onChange={handleChange}
                             disabled={isSubmitted || loading}
                             required
                         />
-                        {wordCounts.contribution > 0 && wordCounts.contribution < 100 && (
+                        {wordCounts.contribution > 0 && wordCounts.contribution < 50 && (
                             <p className="text-amber-500 text-sm">
-                                Please write at least 100 words ({100 - wordCounts.contribution} more words needed).
+                                Mohon tulis minimal 50 kata ({50 - wordCounts.contribution} kata lagi).
                             </p>
                         )}
                     </div>
 
                     <div className="space-y-2">
                         <Label htmlFor="commitment" className="text-lg font-medium">
-                            How will you manage your time and commitment if selected?
+                            Bagaimana cara untuk mengatur waktu dan komitmen kamu jika terpilih?
                             <span className="ml-2 text-sm text-gray-500">
-                                ({wordCounts.commitment} words, minimum 100)
+                                ({wordCounts.commitment} kata, minimal 50)
                             </span>
                         </Label>
                         <textarea
@@ -266,15 +266,15 @@ const Essays = ({ data }: { data: data }) => {
                             name="commitment"
                             rows={5}
                             className="w-full p-2 border rounded-md bg-transparent"
-                            placeholder="Describe your commitment plan..."
+                            placeholder="Jelaskan rencana komitmen kamu..."
                             value={formData.commitment}
                             onChange={handleChange}
                             disabled={isSubmitted || loading}
                             required
                         />
-                        {wordCounts.commitment > 0 && wordCounts.commitment < 100 && (
+                        {wordCounts.commitment > 0 && wordCounts.commitment < 50 && (
                             <p className="text-amber-500 text-sm">
-                                Please write at least 100 words ({100 - wordCounts.commitment} more words needed).
+                                Mohon tulis minimal 50 kata ({50 - wordCounts.commitment} kata lagi).
                             </p>
                         )}
                     </div>

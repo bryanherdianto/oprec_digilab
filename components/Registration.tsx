@@ -218,6 +218,10 @@ const Dashboard = ({ activeSection, progress, data }: { activeSection: string; p
                   <h3 className="font-medium">Interview Schedule</h3>
                   <p className="text-sm text-gray-500">May 14-21, 2025</p>
                 </div>
+                <div className="border-b pb-2">
+                  <h3 className="font-medium">Selection Process</h3>
+                  <p className="text-sm text-gray-500">June-August, 2025</p>
+                </div>
                 <div>
                   <h3 className="font-medium">Results Announcement</h3>
                   <p className="text-sm text-gray-500">August 11, 2025</p>
