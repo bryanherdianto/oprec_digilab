@@ -12,7 +12,6 @@ import { cn } from "@/lib/utils";
 import PersonalInformation from "./dashboard/PersonalInformation";
 import ContactsFiles from "./dashboard/ContactsFiles";
 import Essays from "./dashboard/Essays";
-import { signOut } from "@/backend/googleServices";
 import { useSearchParams, useRouter } from "next/navigation";
 import Link from "next/link";
 
