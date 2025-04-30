@@ -2,7 +2,9 @@
 import { cn } from "@/lib/utils";
 import React, { useState, createContext, useContext } from "react";
 import { AnimatePresence, motion } from "motion/react";
-import { IconMenu2, IconX } from "@tabler/icons-react";
+import { IconArrowLeft, IconMenu2, IconX } from "@tabler/icons-react";
+import { signOut } from "@/backend/googleServices";
+import { useRouter } from "next/navigation";
 
 interface Links {
   label: string;
@@ -184,5 +186,38 @@ export const SidebarLink = ({
         {link.label}
       </motion.span>
     </a>
+  );
+};
+
+export const SidebarLogout = ({ className, ...props }: { className?: string }) => {
+  const { open, animate } = useSidebar();
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    await signOut();
+    router.push("/");
+  };
+
+  return (
+    <button
+      onClick={handleLogout}
+      className={cn(
+        "flex items-center justify-start gap-2 group/sidebar py-2",
+        className
+      )}
+      {...props}
+    >
+      <IconArrowLeft className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />
+
+      <motion.span
+        animate={{
+          display: animate ? (open ? "inline-block" : "none") : "inline-block",
+          opacity: animate ? (open ? 1 : 0) : 1,
+        }}
+        className="cursor-pointer text-neutral-700 dark:text-neutral-200 text-sm group-hover/sidebar:translate-x-1 transition duration-150 whitespace-pre inline-block !p-0 !m-0"
+      >
+        Logout
+      </motion.span>
+    </button>
   );
 };

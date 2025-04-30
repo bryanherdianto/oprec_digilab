@@ -52,14 +52,24 @@ const Essays = ({ data }: { data: data }) => {
     const [isSubmitted, setIsSubmitted] = useState(false);
 
     useEffect(() => {
-        setIsSubmitted(data?.is_submitted);
-        setFormData({
+        const initialFormData = {
             motivation: data?.question_1 || '',
             experience: data?.question_2 || '',
             contribution: data?.question_3 || '',
             commitment: data?.question_4 || ''
-        });
-    }, []);
+        };
+
+        setFormData(initialFormData);
+        setIsSubmitted(data?.is_submitted);
+
+        const newWordCounts = Object.fromEntries(
+            Object.entries(initialFormData).map(([key, value]) => [
+                key,
+                value.trim().split(/\s+/).filter(Boolean).length
+            ])
+        ) as { motivation: number; experience: number; contribution: number; commitment: number; };
+        setWordCounts(newWordCounts);
+    }, [data]);
 
     const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         const { name, value } = e.target;
@@ -144,7 +154,7 @@ const Essays = ({ data }: { data: data }) => {
 
             setMessage({ text: 'Application submitted successfully!', type: 'success' });
             setTimeout(() => {
-                redirect('/dashboard');
+                redirect('/registration?tab=dashboard');
             }, 1000);
         } catch (error) {
             console.error('Error submitting application:', error);

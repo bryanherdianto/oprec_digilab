@@ -90,15 +90,16 @@ const ContactsFiles = ({ data }: { data: data }) => {
         throw new Error("User not found.");
       }
 
-      if (!formData.cvFile || !formData.photoFile) {
-        setMessage({ text: 'Please upload both CV and Photo files.', type: 'error' });
-        setLoading(false);
-        return;
-      }
+      // Check if new files are provided or if we should keep the existing ones
+      const newCvUrl = formData.cvFile
+        ? await uploadCV(formData.cvFile) // upload the new CV file if provided
+        : formData.cvUrl; // keep existing CV URL if no new file is provided
 
-      const cvUrl = await uploadCV(formData.cvFile);
-      const photoUrl = await uploadPhoto(formData.photoFile);
+      const newPhotoUrl = formData.photoFile
+        ? await uploadPhoto(formData.photoFile) // upload the new photo file if provided
+        : formData.photoUrl; // keep existing photo URL if no new file is provided
 
+      // Now, update the user profile with the new or existing URLs
       await addContactsFiles({
         id: user.id,
         phone: formData.phone,
@@ -106,8 +107,8 @@ const ContactsFiles = ({ data }: { data: data }) => {
         ig_username: formData.ig_username,
         line_username: formData.line_username,
         discord_username: formData.discord_username,
-        cv_url: cvUrl,
-        foto_url: photoUrl
+        cv_url: newCvUrl, // Use new or existing CV URL
+        foto_url: newPhotoUrl // Use new or existing photo URL
       });
 
       setMessage({ text: 'Contacts and files saved successfully!', type: 'success' });

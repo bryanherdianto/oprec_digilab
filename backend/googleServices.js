@@ -1,5 +1,4 @@
 import { createClient } from './supabaseClient';
-import bcryptjs from 'bcryptjs';
 
 const supabaseClient = createClient();
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -93,16 +92,16 @@ export const signInWithEmail = async (email, password) => {
 
 export const signOut = async () => {
     try {
-        const { error } = await supabaseClient.auth.signOut();
-
-        if (error) {
-            throw error;
-        }
+      const { data: { user } } = await supabaseClient.auth.getUser();
+      if (!user) return;
+  
+      const { error } = await supabaseClient.auth.signOut();
+      if (error) throw error;
+  
     } catch (error) {
-        console.error('Error signing out:', error);
-        throw error;
+      console.error('Error signing out:', error);
     }
-};
+  };
 
 export const getCurrentUser = async () => {
     try {

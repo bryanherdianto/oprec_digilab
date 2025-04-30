@@ -4,6 +4,7 @@ import { motion } from "motion/react";
 import { IconUpload, IconX, IconFile, IconPhoto, IconFileText } from "@tabler/icons-react";
 import { useDropzone, FileRejection, Accept } from "react-dropzone";
 import Image from "next/image";
+import { deleteCVFromStorage, deletePhotoFromStorage } from "@/backend/formServices";
 
 const mainVariant = {
   initial: {
@@ -135,19 +136,6 @@ export const FileUpload = ({
     setInitialFile(null);
   }, [onChange, maxSizeMB, acceptedFileTypes, outputFilename, validateFile]);
 
-  const handleRemoveFile = () => {
-    setFile(null);
-    setPreview(null);
-    setError(null);
-    setInitialFile(null); // Also clear initialFile
-
-    if (fileInputRef.current) {
-      fileInputRef.current.value = '';
-    }
-
-    onChange?.(null);
-  };
-
   const handleClick = () => {
     fileInputRef.current?.click();
   };
@@ -270,7 +258,7 @@ export const FileUpload = ({
             >
               <div className="flex items-center gap-3 overflow-hidden">
                 {file.type.startsWith('image/') && preview ? (
-                  <div className="relative h-16 w-16 rounded overflow-hidden bg-gray-100 flex-shrink-0">
+                  <div className="relative h-12 w-12 rounded overflow-hidden bg-gray-100 flex-shrink-0">
                     <Image
                       src={preview}
                       alt={file.name}
@@ -296,18 +284,6 @@ export const FileUpload = ({
                   </div>
                 </div>
               </div>
-
-              <button
-                onClick={handleRemoveFile}
-                className={cn(
-                  "text-gray-400 hover:text-red-500 dark:text-gray-500 dark:hover:text-red-400 transition-colors flex-shrink-0 ml-2",
-                  disabled && "opacity-50 pointer-events-none cursor-not-allowed"
-                )}
-                disabled={disabled}
-                aria-disabled={disabled}
-              >
-                <IconX className="h-5 w-5" />
-              </button>
             </motion.div>
           ) : initialFile && (
             <motion.div
@@ -341,18 +317,6 @@ export const FileUpload = ({
                   </div>
                 </div>
               </div>
-
-              <button
-                onClick={handleRemoveFile}
-                className={cn(
-                  "text-gray-400 hover:text-red-500 dark:text-gray-500 dark:hover:text-red-400 transition-colors flex-shrink-0 ml-2",
-                  disabled && "opacity-50 pointer-events-none cursor-not-allowed"
-                )}
-                disabled={disabled}
-                aria-disabled={disabled}
-              >
-                <IconX className="h-5 w-5" />
-              </button>
             </motion.div>
           )}
         </div>

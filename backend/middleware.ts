@@ -47,7 +47,7 @@ export async function updateSession(request: NextRequest) {
     const url = request.nextUrl.clone()
     if (request.nextUrl.pathname.startsWith('/signup')) {
       url.pathname = '/signup'
-    } else if (request.nextUrl.pathname.startsWith('/login')) {
+    } else {
       url.pathname = '/login'
     }
     return NextResponse.redirect(url)

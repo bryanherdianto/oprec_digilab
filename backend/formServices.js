@@ -13,13 +13,45 @@ export const getCurrentUser = async () => {
   }
 };
 
+export const deleteFileFromStorage = async (bucketName, filePath) => {
+  try {
+    const supabaseClient = await createClient();
+    const { error } = await supabaseClient.storage.from(bucketName).remove([filePath]);
+
+    if (error) {
+      throw new Error(`Failed to delete file: ${error.message}`);
+    }
+
+    console.log('File deleted successfully from storage');
+  } catch (error) {
+    console.error('Error deleting file:', error);
+    throw error;
+  }
+};
+
+export const deleteCVFromStorage = async (filePath) => {
+  return deleteFileFromStorage('cv-files', filePath);
+};
+
+export const deletePhotoFromStorage = async (filePath) => {
+  return deleteFileFromStorage('profile-photos', filePath);
+};
+
 export const uploadFile = async (file, bucketName) => {
   try {
+    const supabaseClient = await createClient();
+    const { data: { user } } = await supabaseClient.auth.getUser();
+
     const fileExt = file.name.split('.').pop();
-    const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`;
+    let fileName;
+    if (bucketName === 'cv-files') {
+      fileName = `cv-${user.user_metadata.display_name.replace(/ /g, '')}.${fileExt}`;
+    } else if (bucketName === 'profile-photos') {
+      fileName = `photo-${user.user_metadata.display_name.replace(/ /g, '')}.${fileExt}`;
+    }
     const filePath = `${fileName}`;
 
-    const { data, error } = await supabaseClient.storage
+    const { error } = await supabaseClient.storage
       .from(bucketName)
       .upload(filePath, file);
 
@@ -49,6 +81,7 @@ export const uploadPhoto = async (file) => {
 
 export const addPersonalInformation = async (user) => {
   try {
+    const supabaseClient = await createClient();
     const { data, error } = await supabaseClient
       .from('applicants')
       .upsert([
@@ -73,6 +106,7 @@ export const addPersonalInformation = async (user) => {
 
 export const addContactsFiles = async (user) => {
   try {
+    const supabaseClient = await createClient();
     const { data, error } = await supabaseClient
       .from('applicants')
       .upsert([
@@ -100,6 +134,7 @@ export const addContactsFiles = async (user) => {
 
 export const addEssays = async (user) => {
   try {
+    const supabaseClient = await createClient();
     const { data, error } = await supabaseClient
       .from('applicants')
       .upsert([
@@ -124,6 +159,7 @@ export const addEssays = async (user) => {
 
 export const changeStatus = async (user) => {
   try {
+    const supabaseClient = await createClient();
     const { data: { user: authUser }, error: authError } = await supabaseClient.auth.getUser();
     if (authError || !authUser) {
       throw new Error('User is not authenticated.');
@@ -178,6 +214,7 @@ export const changeStatus = async (user) => {
 
 export const getStatus = async () => {
   try {
+    const supabaseClient = await createClient();
     const { data: { user: authUser }, error: authError } = await supabaseClient.auth.getUser();
     if (authError || !authUser) {
       throw new Error('User is not authenticated.');
@@ -207,6 +244,7 @@ export const getNullLength = async () => {
   try {
     const supabaseClient = await createClient();
     const { data: { user: authUser }, error: authError } = await supabaseClient.auth.getUser();
+
     if (authError || !authUser) {
       throw new Error('User is not authenticated.');
     }
@@ -272,35 +310,4 @@ export const getUserData = async () => {
     console.error('Error changing status:', error);
     throw error;
   }
-};
-
-const getMimeType = (filename) => {
-  const extension = filename.split('.').pop()?.toLowerCase();
-  switch (extension) {
-    case 'pdf':
-      return 'application/pdf';
-    case 'jpg':
-    case 'jpeg':
-      return 'image/jpeg';
-    case 'png':
-      return 'image/png';
-    default:
-      return 'application/octet-stream';
-  }
-};
-
-export const downloadFileFromPublicUrl = async (url) => {
-  const response = await fetch(url);
-
-  if (!response.ok) {
-    throw new Error('Failed to fetch file from URL');
-  }
-
-  const blob = await response.blob();
-
-  const parts = url.split('/');
-  const filename = parts[parts.length - 1];
-  const mimeType = getMimeType(filename);
-
-  return new File([blob], filename, { type: mimeType });
 };
