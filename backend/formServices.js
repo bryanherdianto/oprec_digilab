@@ -31,7 +31,10 @@ export const uploadFile = async (file, bucketName) => {
       fileName = `cv-${userName.replace(/ /g, '')}.${fileExt}`;
     } else if (bucketName === 'profile-photos') {
       fileName = `photo-${userName.replace(/ /g, '')}.${fileExt}`;
+    } else if (bucketName === 'transkrip') {
+      fileName = `transkrip-${userName.replace(/ /g, '')}.${fileExt}`;
     }
+
     const filePath = `${fileName}`;
 
     const { error } = await supabaseClient.storage
