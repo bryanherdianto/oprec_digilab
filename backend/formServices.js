@@ -63,28 +63,7 @@ export const uploadPhoto = async (file) => {
 };
 
 export const uploadTranskrip = async (file) => {
-  try {
-    const supabaseClient = await createClient();
-    
-    const fileName = `transkrip_${Date.now()}_${file.name}`;
-    const { data, error } = await supabaseClient.storage
-      .from('documents')
-      .upload(`transkrip/${fileName}`, file, {
-        cacheControl: '3600',
-        upsert: false
-      });
-
-    if (error) throw error;
-
-    const { data: urlData } = supabaseClient.storage
-      .from('documents')
-      .getPublicUrl(`transkrip/${fileName}`);
-
-    return urlData.publicUrl;
-  } catch (error) {
-    console.error('Error uploading transkrip:', error);
-    throw error;
-  }
+  return uploadFile(file, 'transkrip');
 };
 
 export const addPersonalInformation = async (user) => {

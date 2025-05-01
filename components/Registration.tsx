@@ -40,8 +40,10 @@ interface data {
   line_username: string;
   cvFile: File | null;
   photoFile: File | null;
+  transkripFile: File | null;
   cv_url?: string;
   foto_url?: string;
+  transkrip_url?: string;
   is_submitted: boolean;
 }
 
@@ -54,7 +56,7 @@ export function Registration({ user, progress, data }: { user: User | null; prog
   const links = [
     {
       label: "Dashboard",
-      href: "#",
+      href: "?tab=dashboard",
       icon: (
         <IconBrandTabler className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />
       ),
@@ -62,7 +64,7 @@ export function Registration({ user, progress, data }: { user: User | null; prog
     },
     {
       label: "Personal Info",
-      href: "#",
+      href: "?tab=personal",
       icon: (
         <IconUserBolt className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />
       ),
@@ -70,7 +72,7 @@ export function Registration({ user, progress, data }: { user: User | null; prog
     },
     {
       label: "Contacts & Files",
-      href: "#",
+      href: "?tab=contacts",
       icon: (
         <IconAddressBook className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />
       ),
@@ -78,7 +80,7 @@ export function Registration({ user, progress, data }: { user: User | null; prog
     },
     {
       label: "Essays",
-      href: "#",
+      href: "?tab=essays",
       icon: (
         <IconFileText className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />
       ),
