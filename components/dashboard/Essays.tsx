@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { changeStatus, addEssays } from '@/backend/formServices';
 import { getCurrentUser } from '@/backend/googleServices';
-import { redirect } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 
 interface data {
     nama: string;
@@ -49,6 +49,7 @@ const Essays = ({ data }: { data: data }) => {
         commitment: 0
     });
     const [isSubmitted, setIsSubmitted] = useState(false);
+    const router = useRouter();
 
     useEffect(() => {
         const initialFormData = {
@@ -153,7 +154,7 @@ const Essays = ({ data }: { data: data }) => {
 
             setMessage({ text: 'Application submitted successfully!', type: 'success' });
             setTimeout(() => {
-                redirect('/registration?tab=dashboard');
+                router.push('/registration');
             }, 1000);
         } catch (error) {
             console.error('Error submitting application:', error);
@@ -180,7 +181,7 @@ const Essays = ({ data }: { data: data }) => {
                 <form onSubmit={handleSubmit} className="space-y-8">
                     <div className="space-y-2">
                         <Label htmlFor="motivation" className="text-lg font-medium">
-                            Apa yang memotivasi kamu untuk mendaftar menjadi Asisten Lab Digital?
+                            Apa alasan atau motivasi utama kamu ingin bergabung sebagai Asisten Lab Digital?
                             <span className="ml-2 text-sm text-gray-500">
                                 ({wordCounts.motivation} kata, minimal 50)
                             </span>
