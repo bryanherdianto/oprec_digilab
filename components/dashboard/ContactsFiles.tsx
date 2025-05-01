@@ -17,7 +17,6 @@ interface data {
   question_3: string;
   question_4: string;
   phone: string;
-  address: string;
   discord_username: string;
   ig_username: string;
   line_username: string;
@@ -30,7 +29,6 @@ interface data {
 
 interface ContactFilesData {
   phone: string;
-  address: string;
   discord_username: string;
   ig_username: string;
   line_username: string;
@@ -43,7 +41,6 @@ interface ContactFilesData {
 const ContactsFiles = ({ data }: { data: data }) => {
   const [formData, setFormData] = useState<ContactFilesData>({
     phone: '',
-    address: '',
     discord_username: '',
     ig_username: '',
     line_username: '',
@@ -59,7 +56,6 @@ const ContactsFiles = ({ data }: { data: data }) => {
 
     setFormData({
       phone: data?.phone || '',
-      address: data?.address || '',
       discord_username: data?.discord_username || '',
       ig_username: data?.ig_username || '',
       line_username: data?.line_username || '',
@@ -103,7 +99,6 @@ const ContactsFiles = ({ data }: { data: data }) => {
       await addContactsFiles({
         id: user.id,
         phone: formData.phone,
-        address: formData.address,
         ig_username: formData.ig_username,
         line_username: formData.line_username,
         discord_username: formData.discord_username,
@@ -182,21 +177,6 @@ const ContactsFiles = ({ data }: { data: data }) => {
                   name="line_username"
                   placeholder="Enter your line username"
                   value={formData.line_username}
-                  onChange={handleChange}
-                  required
-                  disabled={isSubmitted || loading}
-                />
-              </div>
-
-              <div className="space-y-2 md:col-span-2">
-                <Label htmlFor="address">Address</Label>
-                <textarea
-                  id="address"
-                  name="address"
-                  rows={3}
-                  className="w-full p-2 border rounded-md bg-transparent"
-                  placeholder="Enter your address"
-                  value={formData.address}
                   onChange={handleChange}
                   required
                   disabled={isSubmitted || loading}

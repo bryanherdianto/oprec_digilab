@@ -16,7 +16,6 @@ interface data {
     question_3: string;
     question_4: string;
     phone: string;
-    address: string;
     discord_username: string;
     ig_username: string;
     line_username: string;
@@ -181,7 +180,7 @@ const Essays = ({ data }: { data: data }) => {
                 <form onSubmit={handleSubmit} className="space-y-8">
                     <div className="space-y-2">
                         <Label htmlFor="motivation" className="text-lg font-medium">
-                            Mengapa kamu ingin bergabung dengan Digital Laboratory?
+                            Apa yang memotivasi kamu untuk mendaftar menjadi Asisten Lab Digital?
                             <span className="ml-2 text-sm text-gray-500">
                                 ({wordCounts.motivation} kata, minimal 50)
                             </span>
@@ -191,7 +190,7 @@ const Essays = ({ data }: { data: data }) => {
                             name="motivation"
                             rows={5}
                             className="w-full p-2 border rounded-md bg-transparent"
-                            placeholder="Jelaskan motivasi kamu untuk bergabung dengan Digital Laboratory..."
+                            placeholder="Jelaskan motivasi kamu untuk bergabung dengan Lab Digital..."
                             value={formData.motivation}
                             onChange={handleChange}
                             disabled={isSubmitted || loading}
@@ -206,7 +205,7 @@ const Essays = ({ data }: { data: data }) => {
 
                     <div className="space-y-2">
                         <Label htmlFor="experience" className="text-lg font-medium">
-                            Jelaskan pengalaman relevan kamu dalam pemrograman atau teknologi digital.
+                            Apa arti dan tugas seorang Asisten Lab menurut kamu?
                             <span className="ml-2 text-sm text-gray-500">
                                 ({wordCounts.experience} kata, minimal 50)
                             </span>
@@ -216,7 +215,7 @@ const Essays = ({ data }: { data: data }) => {
                             name="experience"
                             rows={5}
                             className="w-full p-2 border rounded-md bg-transparent"
-                            placeholder="Jelaskan pengalaman teknis kamu..."
+                            placeholder="Jelaskan arti dan tugas seorang aslab..."
                             value={formData.experience}
                             onChange={handleChange}
                             disabled={isSubmitted || loading}
@@ -231,7 +230,7 @@ const Essays = ({ data }: { data: data }) => {
 
                     <div className="space-y-2">
                         <Label htmlFor="contribution" className="text-lg font-medium">
-                            Menurut kamu, bagaimana cara untuk berkontribusi pada Laboratorium Digital?
+                            Menurut kamu, orang seperti apa yang layak menjadi Asisten Lab?
                             <span className="ml-2 text-sm text-gray-500">
                                 ({wordCounts.contribution} kata, minimal 50)
                             </span>
@@ -241,7 +240,7 @@ const Essays = ({ data }: { data: data }) => {
                             name="contribution"
                             rows={5}
                             className="w-full p-2 border rounded-md bg-transparent"
-                            placeholder="Jelaskan bagaimana kamu dapat berkontribusi..."
+                            placeholder="Jelaskan pendapat kamu..."
                             value={formData.contribution}
                             onChange={handleChange}
                             disabled={isSubmitted || loading}
@@ -256,7 +255,7 @@ const Essays = ({ data }: { data: data }) => {
 
                     <div className="space-y-2">
                         <Label htmlFor="commitment" className="text-lg font-medium">
-                            Bagaimana cara untuk mengatur waktu dan komitmen kamu jika terpilih?
+                            Bagaimana cara untuk mengatur waktu dan komitmen kamu jika terpilih menjadi Asisten Lab?
                             <span className="ml-2 text-sm text-gray-500">
                                 ({wordCounts.commitment} kata, minimal 50)
                             </span>

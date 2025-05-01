@@ -35,7 +35,6 @@ interface data {
   question_3: string;
   question_4: string;
   phone: string;
-  address: string;
   discord_username: string;
   ig_username: string;
   line_username: string;

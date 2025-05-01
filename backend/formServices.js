@@ -89,7 +89,6 @@ export const addContactsFiles = async (user) => {
         {
           id: user.id,
           phone: user.phone,
-          address: user.address,
           ig_username: user.ig_username,
           line_username: user.line_username,
           discord_username: user.discord_username,
