@@ -20,10 +20,17 @@ export const uploadFile = async (file, bucketName) => {
 
     const fileExt = file.name.split('.').pop();
     let fileName;
+    const userName = user?.user_metadata?.full_name || user?.user_metadata?.display_name;
+
+    if (!userName) {
+      console.error('User name (full_name or display_name) not found in metadata.');
+      throw new Error('User name not found in metadata.');
+    }
+
     if (bucketName === 'cv-files') {
-      fileName = `cv-${user.user_metadata.display_name.replace(/ /g, '')}.${fileExt}`;
+      fileName = `cv-${userName.replace(/ /g, '')}.${fileExt}`;
     } else if (bucketName === 'profile-photos') {
-      fileName = `photo-${user.user_metadata.display_name.replace(/ /g, '')}.${fileExt}`;
+      fileName = `photo-${userName.replace(/ /g, '')}.${fileExt}`;
     }
     const filePath = `${fileName}`;
 

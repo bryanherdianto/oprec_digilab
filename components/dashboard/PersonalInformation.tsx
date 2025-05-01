@@ -49,7 +49,7 @@ const PersonalInformation = ({ data }: { data: data }) => {
         setFormData({
             fullName: data?.nama || '',
             npm: data?.npm || '',
-            dateOfBirth: data?.tanggal_lahir.split('T')[0] || '',
+            dateOfBirth: data?.tanggal_lahir ? data.tanggal_lahir.split('T')[0] : '',
             batch: data?.angkatan || ''
         });
 

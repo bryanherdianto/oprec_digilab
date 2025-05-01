@@ -4,7 +4,6 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { changeStatus, addEssays } from '@/backend/formServices';
 import { getCurrentUser } from '@/backend/googleServices';
-import { useRouter } from 'next/navigation';
 
 interface data {
     nama: string;
@@ -49,7 +48,6 @@ const Essays = ({ data }: { data: data }) => {
         commitment: 0
     });
     const [isSubmitted, setIsSubmitted] = useState(false);
-    const router = useRouter();
 
     useEffect(() => {
         const initialFormData = {
@@ -152,10 +150,7 @@ const Essays = ({ data }: { data: data }) => {
                 is_submitted: true
             });
 
-            setMessage({ text: 'Application submitted successfully!', type: 'success' });
-            setTimeout(() => {
-                router.push('/registration');
-            }, 1000);
+            setMessage({ text: 'Application submitted successfully! Please go back to Dashboard section to join LINE group!', type: 'success' });
         } catch (error) {
             console.error('Error submitting application:', error);
             if (error instanceof Error && error.message.includes("NULL")) {
