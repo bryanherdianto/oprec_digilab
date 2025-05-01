@@ -86,6 +86,12 @@ const ContactsFiles = ({ data }: { data: data }) => {
         throw new Error("User not found.");
       }
 
+      // Check if files have been uploaded
+      if (!formData.cvFile && !formData.photoFile) {
+        setMessage({ text: 'Please upload the files needed!', type: 'error' });
+        return;
+      }
+
       // Check if new files are provided or if we should keep the existing ones
       const newCvUrl = formData.cvFile
         ? await uploadCV(formData.cvFile) // upload the new CV file if provided
