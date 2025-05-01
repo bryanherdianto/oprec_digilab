@@ -62,6 +62,31 @@ export const uploadPhoto = async (file) => {
   return uploadFile(file, 'profile-photos');
 };
 
+export const uploadTranskrip = async (file) => {
+  try {
+    const supabaseClient = await createClient();
+    
+    const fileName = `transkrip_${Date.now()}_${file.name}`;
+    const { data, error } = await supabaseClient.storage
+      .from('documents')
+      .upload(`transkrip/${fileName}`, file, {
+        cacheControl: '3600',
+        upsert: false
+      });
+
+    if (error) throw error;
+
+    const { data: urlData } = supabaseClient.storage
+      .from('documents')
+      .getPublicUrl(`transkrip/${fileName}`);
+
+    return urlData.publicUrl;
+  } catch (error) {
+    console.error('Error uploading transkrip:', error);
+    throw error;
+  }
+};
+
 export const addPersonalInformation = async (user) => {
   try {
     const supabaseClient = await createClient();
@@ -100,7 +125,8 @@ export const addContactsFiles = async (user) => {
           line_username: user.line_username,
           discord_username: user.discord_username,
           cv_url: user.cv_url,
-          foto_url: user.foto_url
+          foto_url: user.foto_url,
+          transkrip_url: user.transkrip_url
         }
       ])
     if (error) {

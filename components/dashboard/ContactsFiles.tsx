@@ -5,7 +5,7 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { FileUpload } from "@/components/ui/file-upload";
 import { getCurrentUser } from '@/backend/googleServices';
-import { addContactsFiles, uploadCV, uploadPhoto } from '@/backend/formServices';
+import { addContactsFiles, uploadCV, uploadPhoto, uploadTranskrip } from '@/backend/formServices';
 
 interface data {
   nama: string;
@@ -22,8 +22,10 @@ interface data {
   line_username: string;
   cvFile: File | null;
   photoFile: File | null;
+  transkripFile: File | null;
   cv_url?: string;
   foto_url?: string;
+  transkrip_url?: string;
   is_submitted: boolean;
 }
 
@@ -34,8 +36,10 @@ interface ContactFilesData {
   line_username: string;
   cvFile: File | null;
   photoFile: File | null;
+  transkripFile: File | null;
   cvUrl?: string;
   photoUrl?: string;
+  transkripUrl?: string;
 }
 
 const ContactsFiles = ({ data }: { data: data }) => {
@@ -46,6 +50,7 @@ const ContactsFiles = ({ data }: { data: data }) => {
     line_username: '',
     cvFile: null,
     photoFile: null,
+    transkripFile: null,
   });
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState({ text: '', type: '' });
@@ -61,8 +66,10 @@ const ContactsFiles = ({ data }: { data: data }) => {
       line_username: data?.line_username || '',
       cvFile: data?.cvFile || null,
       photoFile: data?.photoFile || null,
+      transkripFile: data?.transkripFile || null,
       cvUrl: data?.cv_url || '',
       photoUrl: data?.foto_url || '',
+      transkripUrl: data?.transkrip_url || ''
     });
   }, []);
 
@@ -74,52 +81,58 @@ const ContactsFiles = ({ data }: { data: data }) => {
     });
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    setMessage({ text: '', type: '' });
+const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+  setLoading(true);
+  setMessage({ text: '', type: '' });
 
-    try {
-      const user = await getCurrentUser();
+  try {
+    const user = await getCurrentUser();
 
-      if (!user) {
-        throw new Error("User not found.");
-      }
-
-      // Check if files have been uploaded
-      if (!formData.cvFile && !formData.photoFile) {
-        setMessage({ text: 'Please upload the files needed!', type: 'error' });
-        return;
-      }
-
-      // Check if new files are provided or if we should keep the existing ones
-      const newCvUrl = formData.cvFile
-        ? await uploadCV(formData.cvFile) // upload the new CV file if provided
-        : formData.cvUrl; // keep existing CV URL if no new file is provided
-
-      const newPhotoUrl = formData.photoFile
-        ? await uploadPhoto(formData.photoFile) // upload the new photo file if provided
-        : formData.photoUrl; // keep existing photo URL if no new file is provided
-
-      // Now, update the user profile with the new or existing URLs
-      await addContactsFiles({
-        id: user.id,
-        phone: formData.phone,
-        ig_username: formData.ig_username,
-        line_username: formData.line_username,
-        discord_username: formData.discord_username,
-        cv_url: newCvUrl, // Use new or existing CV URL
-        foto_url: newPhotoUrl // Use new or existing photo URL
-      });
-
-      setMessage({ text: 'Contacts and files saved successfully!', type: 'success' });
-    } catch (error) {
-      console.error('Error saving contacts and files:', error);
-      setMessage({ text: 'Failed to save information. Please try again.', type: 'error' });
-    } finally {
-      setLoading(false);
+    if (!user) {
+      throw new Error("User not found.");
     }
-  };
+
+    // Check if files have been uploaded
+    if (!formData.cvFile && !formData.photoFile && !formData.transkripFile) {
+      setMessage({ text: 'Please upload the files needed!', type: 'error' });
+      return;
+    }
+
+    // Check if new files are provided or if we should keep the existing ones
+    const newCvUrl = formData.cvFile
+      ? await uploadCV(formData.cvFile) // upload the new CV file if provided
+      : formData.cvUrl; // keep existing CV URL if no new file is provided
+
+    const newPhotoUrl = formData.photoFile
+      ? await uploadPhoto(formData.photoFile) // upload the new photo file if provided
+      : formData.photoUrl; // keep existing photo URL if no new file is provided
+
+    // Add transkrip upload logic
+    const newTranskripUrl = formData.transkripFile
+      ? await uploadTranskrip(formData.transkripFile) // You'll need to create this function
+      : formData.transkripUrl;
+
+    // Now, update the user profile with the new or existing URLs
+    await addContactsFiles({
+      id: user.id,
+      phone: formData.phone,
+      ig_username: formData.ig_username,
+      line_username: formData.line_username,
+      discord_username: formData.discord_username,
+      cv_url: newCvUrl, // Use new or existing CV URL
+      foto_url: newPhotoUrl, // Use new or existing photo URL
+      transkrip_url: newTranskripUrl
+    });
+
+    setMessage({ text: 'Contacts and files saved successfully!', type: 'success' });
+  } catch (error) {
+    console.error('Error saving contacts and files:', error);
+    setMessage({ text: 'Failed to save information. Please try again.', type: 'error' });
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <div className="space-y-6 p-4 max-w-3xl mx-auto">
@@ -224,6 +237,21 @@ const ContactsFiles = ({ data }: { data: data }) => {
                 disabled={isSubmitted || loading}
                 initialFileUrl={formData.photoUrl} // Pass existing Photo URL
               />
+
+                <FileUpload
+                      label="Upload Transkrip Nilai"
+                      acceptedFileTypes={{ 'image/jpeg': ['.jpg', '.jpeg'], 'image/png': ['.png'], 'application/pdf': ['.pdf'] }}
+                      maxSizeMB={3}
+                      onChange={(file, desiredFilename) => {
+                        if (file) {
+                          setFormData(prev => ({ ...prev, transkripFile: file, transkripOutputFilename: desiredFilename }));
+                        } else {
+                          setFormData(prev => ({ ...prev, transkripFile: null, transkripOutputFilename: undefined }));
+                        }
+                      }}
+                      disabled={isSubmitted || loading}
+                      initialFileUrl={formData.transkripUrl}
+                    />
             </div>
           </div>
 
