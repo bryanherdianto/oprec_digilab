@@ -50,8 +50,7 @@ interface data {
 export function Registration({ user, progress, data }: { user: User | null; progress: number; data: data }) {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const tabParam = searchParams.get("tab") || "dashboard";
-  const [activeSection, setActiveSection] = useState(tabParam);
+  const activeSection = searchParams.get("tab") || "dashboard";
 
   const links = [
     {
@@ -90,7 +89,6 @@ export function Registration({ user, progress, data }: { user: User | null; prog
   const [open, setOpen] = useState(false);
 
   const handleLinkClick = (id: string) => {
-    setActiveSection(id);
     router.push(`?tab=${id}`);
   };
 

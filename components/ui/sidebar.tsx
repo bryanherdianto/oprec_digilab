@@ -4,7 +4,7 @@ import React, { useState, createContext, useContext } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { IconArrowLeft, IconMenu2, IconX } from "@tabler/icons-react";
 import { signOut } from "@/backend/googleServices";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 interface Links {
   label: string;
@@ -166,7 +166,7 @@ export const SidebarLink = ({
 }) => {
   const { open, animate } = useSidebar();
   return (
-    <a
+    <Link
       href={link.href}
       className={cn(
         "flex items-center justify-start gap-2 group/sidebar py-2",
@@ -185,17 +185,16 @@ export const SidebarLink = ({
       >
         {link.label}
       </motion.span>
-    </a>
+    </Link>
   );
 };
 
 export const SidebarLogout = ({ className, ...props }: { className?: string }) => {
   const { open, animate } = useSidebar();
-  const router = useRouter();
 
   const handleLogout = async () => {
     await signOut();
-    router.push("/");
+    window.location.replace("/");
   };
 
   return (

@@ -9,9 +9,9 @@ export const signInWithGoogle = async () => {
         const { error } = await supabaseClient.auth.signInWithOAuth({
             provider: 'google',
             options: {
-              redirectTo: `${window.location.origin}/auth/callback`,
+                redirectTo: `${window.location.origin}/auth/callback`,
             },
-          })
+        })
 
         if (error) {
             throw error;
@@ -92,16 +92,15 @@ export const signInWithEmail = async (email, password) => {
 
 export const signOut = async () => {
     try {
-      const { data: { user } } = await supabaseClient.auth.getUser();
-      if (!user) return;
-  
-      const { error } = await supabaseClient.auth.signOut();
-      if (error) throw error;
-  
+        const { data: { user } } = await supabaseClient.auth.getUser();
+        if (!user) return;
+
+        const { error } = await supabaseClient.auth.signOut();
+        if (error) throw error;
     } catch (error) {
-      console.error('Error signing out:', error);
+        console.error('Error signing out:', error);
     }
-  };
+};
 
 export const getCurrentUser = async () => {
     try {
