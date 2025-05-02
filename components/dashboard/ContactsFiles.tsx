@@ -94,8 +94,14 @@ const ContactsFiles = ({ data }: { data: data }) => {
       }
 
       // Check if files have been uploaded
-      if (!formData.cvFile && !formData.photoFile && !formData.transkripFile) {
+      if (!formData.cvFile || !formData.photoFile || !formData.transkripFile) {
         setMessage({ text: 'Please upload the files needed!', type: 'error' });
+        return;
+      }
+
+      // Check if contact information is provided
+      if (!formData.phone || !formData.discord_username || !formData.ig_username || !formData.line_username) {
+        setMessage({ text: 'Please fill in all contact information!', type: 'error' });
         return;
       }
 
