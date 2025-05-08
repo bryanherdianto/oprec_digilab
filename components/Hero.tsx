@@ -17,7 +17,7 @@ function Hero() {
     // Update countdown based on target date
     useEffect(() => {
         // Target date: May 9, 2025 (one month after current date)
-        const targetDate = new Date('2025-05-09T00:00:00').getTime();
+        const targetDate = new Date('2025-05-09T23:59:59').getTime();
 
         const updateCountdown = () => {
             const now = new Date().getTime();

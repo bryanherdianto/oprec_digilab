@@ -48,8 +48,21 @@ const Essays = ({ data }: { data: data }) => {
         commitment: 0
     });
     const [isSubmitted, setIsSubmitted] = useState(false);
+    const targetDate = new Date('2025-05-09T23:59:59').getTime();
+    const [isDeadlinePassed, setIsDeadlinePassed] = useState(false);
 
     useEffect(() => {
+        const now = Date.now();
+        let timeout: NodeJS.Timeout | null = null;
+
+        if (now >= targetDate) {
+            setIsDeadlinePassed(true);
+        } else {
+            timeout = setTimeout(() => {
+                setIsDeadlinePassed(true);
+            }, targetDate - now);
+        }
+
         const initialFormData = {
             motivation: data?.question_1 || '',
             experience: data?.question_2 || '',
@@ -67,6 +80,10 @@ const Essays = ({ data }: { data: data }) => {
             ])
         ) as { motivation: number; experience: number; contribution: number; commitment: number; };
         setWordCounts(newWordCounts);
+
+        return () => {
+            if (timeout) clearTimeout(timeout);
+        };
     }, [data]);
 
     const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -284,7 +301,7 @@ const Essays = ({ data }: { data: data }) => {
                         <Button type="submit" disabled={loading || isSubmitted}>
                             {loading ? 'Saving...' : 'Save'}
                         </Button>
-                        <Button variant="outline" onClick={handleSubmitApplication} disabled={loading || isSubmitted}>
+                        <Button variant="outline" onClick={handleSubmitApplication} disabled={loading || isSubmitted || isDeadlinePassed}>
                             {loading ? 'Submitting...' : 'Submit Application'}
                         </Button>
                     </div>
