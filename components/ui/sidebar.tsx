@@ -10,6 +10,7 @@ interface Links {
   label: string;
   href: string;
   icon: React.JSX.Element | React.ReactNode;
+  disabled?: boolean;
 }
 
 interface SidebarContextProps {
@@ -170,6 +171,7 @@ export const SidebarLink = ({
       href={link.href}
       className={cn(
         "flex items-center justify-start gap-2 group/sidebar py-2",
+        link.disabled ? "pointer-events-none" : "",
         className
       )}
       {...props}

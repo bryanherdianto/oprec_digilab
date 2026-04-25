@@ -15,7 +15,6 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Oprec Digilab",
   description: "Let's join Digital Laboratory",
-  icons: "/Logo.svg"
 };
 
 export default function RootLayout({

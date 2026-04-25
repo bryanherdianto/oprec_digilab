@@ -106,7 +106,7 @@ export function Registration({ user, progress, data }: { user: User | null; prog
               href="/"
               className="relative z-20 flex items-center space-x-2 py-1 text-sm font-normal text-black"
             >
-              <img src="/Logo.svg" alt="" className="h-7 w-7 shrink-0 object-cover" />
+              <img src="/Digilab.svg" className="h-7 w-7 shrink-0 object-cover" />
               <AnimatePresence>
                 {open && (
                   <motion.span
@@ -144,6 +144,7 @@ export function Registration({ user, progress, data }: { user: User | null; prog
               link={{
                 label: user?.user_metadata?.full_name || user?.user_metadata?.display_name || '',
                 href: "#",
+                disabled: true,
                 icon: (
                   <img
                     src={user?.user_metadata?.avatar_url || "/default-avatar.jpg"}
