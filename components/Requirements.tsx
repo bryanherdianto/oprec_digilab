@@ -3,7 +3,7 @@ import { HoverEffect } from "@/components/ui/card-hover-effect";
 export function Requirements() {
 	return (
 		<div id="recruitment" className="max-w-5xl mx-auto px-8 pb-20">
-			<div className="text-center px-4 py-16 max-w-3xl mx-auto">
+			<div className="text-center px-4 pt-16 pb-8 max-w-3xl mx-auto">
 				<p className="text-md font-mono font-medium mb-2 text-transparent bg-clip-text bg-linear-to-r from-white to-black">
 					Joining Criteria
 				</p>

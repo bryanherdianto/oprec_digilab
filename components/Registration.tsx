@@ -95,7 +95,7 @@ export function Registration({
 	];
 
 	return (
-		<div className="mx-auto h-screen flex w-full flex-1 flex-col rounded-md border border-neutral-200 bg-gray-100 md:flex-row dark:border-neutral-700 dark:bg-neutral-800">
+		<div className="mx-auto h-dvh flex w-full flex-1 flex-col rounded-md border border-neutral-200 bg-gray-100 md:flex-row dark:border-neutral-700 dark:bg-neutral-800">
 			<Sidebar open={open} setOpen={setOpen}>
 				<SidebarBody className="justify-between gap-10">
 					<div className="flex flex-1 flex-col overflow-x-hidden overflow-y-auto">
