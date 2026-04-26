@@ -60,7 +60,7 @@ export const FloatingNav = ({
 					duration: 0.2,
 				}}
 				className={cn(
-					"flex max-w-fit fixed top-10 inset-x-0 mx-auto border border-transparent dark:border-white/[0.2] rounded-full dark:bg-black bg-white shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)] z-[5000] pr-2 pl-8 py-2  items-center justify-center space-x-4",
+					"flex max-w-fit fixed top-10 inset-x-0 mx-auto border border-transparent dark:border-white/20 rounded-full dark:bg-black bg-white shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)] z-5000 pr-2 pl-8 py-2  items-center justify-center space-x-4",
 					className,
 				)}
 			>
@@ -78,7 +78,7 @@ export const FloatingNav = ({
 					),
 				)}
 				<button
-					className="group/btn cursor-pointer border text-sm font-medium relative border-neutral-200 dark:border-white/[0.2] text-black dark:text-white px-4 py-2 rounded-full"
+					className="group/btn cursor-pointer border text-sm font-medium relative border-neutral-200 dark:border-white/20 text-black dark:text-white px-4 py-2 rounded-full"
 					onClick={() => handleClick("/login")}
 				>
 					<span>Login</span>
@@ -92,8 +92,8 @@ export const FloatingNav = ({
 const BottomGradient = () => {
 	return (
 		<>
-			<span className="absolute inset-x-0 -bottom-px mx-auto block h-px w-1/2 bg-gradient-to-r from-transparent via-blue-500 to-transparent opacity-0 transition duration-500 group-hover/btn:opacity-100" />
-			<span className="absolute inset-x-10 -bottom-px mx-auto block h-px w-1/4 bg-gradient-to-r from-transparent via-indigo-500 to-transparent opacity-0 blur-sm transition duration-500 group-hover/btn:opacity-100" />
+			<span className="absolute inset-x-0 -bottom-px mx-auto block h-px w-1/2 bg-linear-to-r from-transparent via-blue-500 to-transparent opacity-0 transition duration-500 group-hover/btn:opacity-100" />
+			<span className="absolute inset-x-10 -bottom-px mx-auto block h-px w-1/4 bg-linear-to-r from-transparent via-indigo-500 to-transparent opacity-0 blur-sm transition duration-500 group-hover/btn:opacity-100" />
 		</>
 	);
 };

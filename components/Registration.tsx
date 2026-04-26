@@ -95,12 +95,7 @@ export function Registration({
 	];
 
 	return (
-		<div
-			className={cn(
-				"mx-auto flex w-full flex-1 flex-col rounded-md border border-neutral-200 bg-gray-100 md:flex-row dark:border-neutral-700 dark:bg-neutral-800",
-				"h-screen",
-			)}
-		>
+		<div className="mx-auto h-screen flex w-full flex-1 flex-col rounded-md border border-neutral-200 bg-gray-100 md:flex-row dark:border-neutral-700 dark:bg-neutral-800">
 			<Sidebar open={open} setOpen={setOpen}>
 				<SidebarBody className="justify-between gap-10">
 					<div className="flex flex-1 flex-col overflow-x-hidden overflow-y-auto">
@@ -197,8 +192,8 @@ const Dashboard = ({
 				return <Essays data={data} />;
 			default:
 				return (
-					<div className="grid grid-cols-1 sm:grid-cols-2 gap-4 h-[70%]">
-						<div className="h-full w-full rounded-lg bg-gray-100 dark:bg-neutral-800 p-4 shadow-sm">
+					<div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+						<div className="rounded-lg bg-gray-100 dark:bg-neutral-800 p-4 shadow-sm">
 							<h2 className="text-xl font-bold mb-4">Application Overview</h2>
 							<p>Welcome to Digital Laboratory application system.</p>
 							<p className="mt-2">

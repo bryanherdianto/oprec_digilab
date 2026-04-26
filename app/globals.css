@@ -144,3 +144,8 @@ input[type="password"]::-ms-reveal {
 input[type="password"]::-webkit-textfield-decoration-container {
 	filter: invert(1);
 }
+
+input {
+	color: white;
+	-webkit-text-fill-color: white;
+}

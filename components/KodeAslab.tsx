@@ -69,9 +69,9 @@ function LetterReel({
 	}, [trigger, direction]);
 
 	return (
-		<div className="h-screen w-[40px] sm:w-[100px] relative overflow-hidden">
+		<div className="h-[40em] w-10 sm:w-[100px] relative overflow-hidden">
 			<div
-				className="absolute top-0 left-0 transition-transform duration-[3000ms] ease-in-out"
+				className="absolute top-0 left-0 transition-transform duration-3000 ease-in-out"
 				style={{
 					transform: `translateY(${translateY}px)`,
 				}}
@@ -79,7 +79,7 @@ function LetterReel({
 				{ALPHABET.map((letter, index) => (
 					<div
 						key={`${letter}-${index}`}
-						className="h-[60px] sm:h-[128px] w-[40px] sm:w-[100px] flex items-center justify-center text-5xl sm:text-9xl font-mono text-white"
+						className="h-[60px] sm:h-32 w-10 sm:w-[100px] flex items-center justify-center text-5xl sm:text-9xl font-mono text-white"
 						style={{
 							textShadow: "none",
 						}}
@@ -130,7 +130,7 @@ export default function KodeAslab() {
 			<LetterReel direction={rightDirection} trigger={cycle} />
 			<Button
 				size="lg"
-				className="font-sans text-lg rounded-full absolute bottom-[25vh]"
+				className="font-sans text-lg rounded-full absolute bottom-[8em]"
 				variant="outline"
 				onClick={() => router.push("/login")}
 			>

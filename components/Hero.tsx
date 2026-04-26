@@ -5,6 +5,7 @@ import { FlipWords } from "../components/ui/flip-words";
 
 function Hero() {
 	const words = ["better", "inspiring", "modern"];
+	const [deadlineText, setDeadlineText] = useState("");
 
 	// Add state for countdown values
 	const [countdown, setCountdown] = useState({
@@ -16,9 +17,16 @@ function Hero() {
 
 	// Update countdown based on target date
 	useEffect(() => {
-		const targetDate = new Date(
-			process.env.NEXT_PUBLIC_DEADLINE || "2026-05-09T23:59:59",
-		).getTime();
+		const deadline = process.env.NEXT_PUBLIC_DEADLINE || "2026-05-09T23:59:59";
+		const targetDate = new Date(deadline).getTime();
+
+		// Format the date for the display
+		const formattedDate = new Date(deadline).toLocaleDateString("en-US", {
+			day: "numeric",
+			month: "long",
+			year: "numeric",
+		});
+		setDeadlineText(formattedDate);
 
 		const updateCountdown = () => {
 			const now = new Date().getTime();
@@ -69,7 +77,7 @@ function Hero() {
 	return (
 		<div
 			id="home"
-			className="min-h-screen w-full flex flex-col justify-center items-center px-4 pt-20 mx-auto"
+			className="h-[55em] md:h-[40em] xl:h-[50em] w-full flex flex-col justify-center items-center px-4 pt-15 mx-auto"
 		>
 			<div className="text-4xl sm:text-5xl font-normal text-neutral-600 dark:text-neutral-400">
 				<div>
@@ -82,7 +90,7 @@ function Hero() {
 			</div>
 			<div className="flex flex-col justify-center items-center mt-20">
 				<div>
-					Deadline: <strong>April 25, 2026</strong>
+					Deadline: <strong>{deadlineText}</strong>
 				</div>
 				<div className="grid grid-flow-col gap-5 text-center auto-cols-max">
 					<div className="flex flex-col p-2 bg-neutral rounded-box text-neutral-content">

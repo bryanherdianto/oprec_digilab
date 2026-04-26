@@ -119,7 +119,7 @@ export default function SignupForm() {
 	};
 
 	return (
-		<div className="overflow-auto h-screen flex flex-col justify-start shadow-input mx-auto w-full max-w-md rounded-none bg-white p-4 md:rounded-2xl md:p-8 dark:bg-black relative">
+		<div className="overflow-auto flex flex-col justify-start shadow-input mx-auto w-full max-w-md rounded-none bg-white p-4 md:rounded-2xl md:p-8 dark:bg-black relative">
 			<div className="fixed z-50 top-4 right-4 left-4 sm:left-auto space-y-2">
 				<AnimatePresence>
 					{message && (
@@ -243,7 +243,7 @@ export default function SignupForm() {
 					<BottomGradient />
 				</button>
 
-				<div className="my-8 h-[1px] w-full bg-gradient-to-r from-transparent via-neutral-300 to-transparent dark:via-neutral-700" />
+				<div className="my-8 h-px w-full bg-linear-to-r from-transparent via-neutral-300 to-transparent dark:via-neutral-700" />
 
 				<div className="flex flex-col items-center space-y-4">
 					<button
@@ -277,8 +277,8 @@ export default function SignupForm() {
 const BottomGradient = () => {
 	return (
 		<>
-			<span className="absolute inset-x-0 -bottom-px block h-px w-full bg-gradient-to-r from-transparent via-cyan-500 to-transparent opacity-0 transition duration-500 group-hover/btn:opacity-100" />
-			<span className="absolute inset-x-10 -bottom-px mx-auto block h-px w-1/2 bg-gradient-to-r from-transparent via-indigo-500 to-transparent opacity-0 blur-sm transition duration-500 group-hover/btn:opacity-100" />
+			<span className="absolute inset-x-0 -bottom-px block h-px w-full bg-linear-to-r from-transparent via-cyan-500 to-transparent opacity-0 transition duration-500 group-hover/btn:opacity-100" />
+			<span className="absolute inset-x-10 -bottom-px mx-auto block h-px w-1/2 bg-linear-to-r from-transparent via-indigo-500 to-transparent opacity-0 blur-sm transition duration-500 group-hover/btn:opacity-100" />
 		</>
 	);
 };

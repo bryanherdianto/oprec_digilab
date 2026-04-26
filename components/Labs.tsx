@@ -30,9 +30,9 @@ export function Labs() {
 		},
 	];
 	return (
-		<div className="overflow-hidden w-full min-h-screen py-20">
+		<div className="overflow-hidden w-full pb-40">
 			<div className="text-center px-4 py-16 max-w-3xl mx-auto">
-				<p className="text-md font-mono font-medium mb-2 text-transparent bg-clip-text bg-gradient-to-r from-white to-zinc-900">
+				<p className="text-md font-mono font-medium mb-2 text-transparent bg-clip-text bg-linear-to-r from-white to-zinc-900">
 					What labs do we have?
 				</p>
 				<h2 className="text-4xl sm:text-5xl font-extrabold text-white mb-4">
