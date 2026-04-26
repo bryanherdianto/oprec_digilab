@@ -194,24 +194,13 @@ const Dashboard = ({
 				return (
 					<div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
 						<div className="rounded-lg bg-gray-100 dark:bg-neutral-800 p-4 shadow-sm">
-							<h2 className="text-xl font-bold mb-4">Application Overview</h2>
-							<p>Welcome to Digital Laboratory application system.</p>
-							<p className="mt-2">
+							<h2 className="text-xl font-bold mb-4">
+								Welcome to Digilab Oprec!
+							</h2>
+							<p>
 								Complete your application by filling out all required sections:
 								Personal Information, Contacts & Files, and Essays.
 							</p>
-							<div className="mt-4">
-								<h3 className="font-medium">Application Progress</h3>
-								<div className="w-full bg-gray-200 rounded-full h-2.5 mt-2 dark:bg-gray-700">
-									<div
-										className="bg-blue-600 h-2.5 rounded-full"
-										style={{ width: `${progress}%` }}
-									></div>
-								</div>
-								<p className="text-sm mt-1">
-									{Math.round(progress)}% Completed
-								</p>
-							</div>
 							{data?.is_submitted && (
 								<>
 									<div className="mt-4 hidden flex-col items-center lg:flex">
@@ -235,26 +224,15 @@ const Dashboard = ({
 								</>
 							)}
 						</div>
-						<div className="h-full w-full rounded-lg bg-gray-100 dark:bg-neutral-800 p-4 shadow-sm">
-							<h2 className="text-xl font-bold mb-4">Recent Announcements</h2>
-							<div className="space-y-4">
-								<div className="border-b pb-2">
-									<h3 className="font-medium">Application Deadline</h3>
-									<p className="text-sm text-gray-500">May 9, 2025</p>
-								</div>
-								<div className="border-b pb-2">
-									<h3 className="font-medium">Interview Schedule</h3>
-									<p className="text-sm text-gray-500">May 14-21, 2025</p>
-								</div>
-								<div className="border-b pb-2">
-									<h3 className="font-medium">Selection Process</h3>
-									<p className="text-sm text-gray-500">June-August, 2025</p>
-								</div>
-								<div>
-									<h3 className="font-medium">Results Announcement</h3>
-									<p className="text-sm text-gray-500">August 11, 2025</p>
-								</div>
+						<div className="w-full self-start rounded-lg bg-gray-100 dark:bg-neutral-800 p-4 shadow-sm">
+							<h2 className="text-xl font-bold mb-4">Application Progress</h2>
+							<div className="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
+								<div
+									className="bg-blue-600 h-2.5 rounded-full"
+									style={{ width: `${progress}%` }}
+								></div>
 							</div>
+							<p className="text-sm mt-2">{Math.round(progress)}% Completed</p>
 						</div>
 					</div>
 				);

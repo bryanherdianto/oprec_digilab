@@ -1,11 +1,13 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import {
 	motion,
-	AnimatePresence,
 	useScroll,
 	useMotionValueEvent,
+	useMotionValue,
+	useSpring,
+	useTransform,
 } from "motion/react";
 import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
@@ -22,23 +24,27 @@ export const FloatingNav = ({
 }) => {
 	const { scrollYProgress } = useScroll();
 
-	const [visible, setVisible] = useState(true);
+	const rawVisible = useMotionValue(1);
+	const smoothVisible = useSpring(rawVisible, { stiffness: 260, damping: 30 });
 
 	useMotionValueEvent(scrollYProgress, "change", (current) => {
 		if (typeof current === "number") {
 			const direction = current! - scrollYProgress.getPrevious()!;
 
 			if (scrollYProgress.get() < 0.001) {
-				setVisible(true);
+				rawVisible.set(1);
 			} else {
 				if (direction < 0) {
-					setVisible(true);
+					rawVisible.set(1);
 				} else {
-					setVisible(false);
+					rawVisible.set(0);
 				}
 			}
 		}
 	});
+
+	const y = useTransform(smoothVisible, [0, 1], [-100, 0]);
+	const opacity = useTransform(smoothVisible, [0, 1], [0, 1]);
 
 	const router = useRouter();
 	const handleClick = (link: string) => {
@@ -46,26 +52,13 @@ export const FloatingNav = ({
 	};
 
 	return (
-		<AnimatePresence mode="sync">
-			<motion.div
-				initial={{
-					opacity: 1,
-					y: -100,
-				}}
-				animate={{
-					y: visible ? 0 : -100,
-					opacity: visible ? 1 : 0,
-				}}
-				transition={{
-					type: "spring",
-					stiffness: 260,
-					damping: 30,
-				}}
-				className={cn(
-					"flex max-w-fit fixed top-10 inset-x-0 mx-auto border border-transparent dark:border-white/20 rounded-full dark:bg-black bg-white shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)] z-5000 pr-2 pl-8 py-2  items-center justify-center space-x-4",
-					className,
-				)}
-			>
+		<motion.div
+			style={{ y, opacity }}
+			className={cn(
+				"flex max-w-fit fixed top-10 inset-x-0 mx-auto border border-transparent dark:border-white/20 rounded-full dark:bg-black bg-white shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)] z-5000 pr-2 pl-8 py-2  items-center justify-center space-x-4 will-change-transform",
+				className,
+			)}
+		>
 				{navItems.map(
 					(navItem: { name: string; link: string }, idx: number) => (
 						<a
@@ -87,7 +80,6 @@ export const FloatingNav = ({
 					<BottomGradient />
 				</button>
 			</motion.div>
-		</AnimatePresence>
 	);
 };
 
