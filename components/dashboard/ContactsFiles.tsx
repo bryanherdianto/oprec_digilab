@@ -48,7 +48,7 @@ interface ContactFilesData {
 	transkripUrl?: string;
 }
 
-const ContactsFiles = ({ data }: { data: data }) => {
+const ContactsFiles = ({ data }: { data: data | null }) => {
 	const router = useRouter();
 	const [formData, setFormData] = useState<ContactFilesData>({
 		phone: "",
@@ -64,7 +64,7 @@ const ContactsFiles = ({ data }: { data: data }) => {
 	const [isSubmitted, setIsSubmitted] = useState(false);
 
 	useEffect(() => {
-		setIsSubmitted(data?.is_submitted);
+		setIsSubmitted(data?.is_submitted ?? false);
 
 		setFormData({
 			phone: data?.phone || "",
@@ -78,7 +78,7 @@ const ContactsFiles = ({ data }: { data: data }) => {
 			photoUrl: data?.foto_url || "",
 			transkripUrl: data?.transkrip_url || "",
 		});
-	}, []);
+	}, [data]);
 
 	const handleChange = (
 		e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -102,13 +102,6 @@ const ContactsFiles = ({ data }: { data: data }) => {
 				throw new Error("User not found.");
 			}
 
-			// Check if files have been uploaded
-			if (!formData.cvFile || !formData.photoFile || !formData.transkripFile) {
-				setMessage({ text: "Please upload the files needed!", type: "error" });
-				return;
-			}
-
-			// Check if contact information is provided
 			if (
 				!formData.phone ||
 				!formData.discord_username ||
@@ -122,18 +115,31 @@ const ContactsFiles = ({ data }: { data: data }) => {
 				return;
 			}
 
-			// Check if new files are provided or if we should keep the existing ones
+			if (
+				(!formData.cvFile && !formData.cvUrl) ||
+				(!formData.photoFile && !formData.photoUrl) ||
+				(!formData.transkripFile && !formData.transkripUrl)
+			) {
+				setMessage({
+					text: "Please upload all required files!",
+					type: "error",
+				});
+				return;
+			}
+
 			const newCvUrl = formData.cvFile
-				? await uploadCV(formData.cvFile) // upload the new CV file if provided
-				: formData.cvUrl; // keep existing CV URL if no new file is provided
+				? await uploadCV(formData.cvFile, formData.cvUrl || undefined)
+				: formData.cvUrl;
 
 			const newPhotoUrl = formData.photoFile
-				? await uploadPhoto(formData.photoFile) // upload the new photo file if provided
-				: formData.photoUrl; // keep existing photo URL if no new file is provided
+				? await uploadPhoto(formData.photoFile, formData.photoUrl || undefined)
+				: formData.photoUrl;
 
-			// Add transkrip upload logic
 			const newTranskripUrl = formData.transkripFile
-				? await uploadTranskrip(formData.transkripFile) // You'll need to create this function
+				? await uploadTranskrip(
+						formData.transkripFile,
+						formData.transkripUrl || undefined,
+					)
 				: formData.transkripUrl;
 
 			// Now, update the user profile with the new or existing URLs
@@ -195,7 +201,7 @@ const ContactsFiles = ({ data }: { data: data }) => {
 							</div>
 
 							<div className="space-y-2">
-								<Label htmlFor="email">Discord Username</Label>
+								<Label htmlFor="discord_username">Discord Username</Label>
 								<Input
 									id="discord_username"
 									name="discord_username"
@@ -208,7 +214,7 @@ const ContactsFiles = ({ data }: { data: data }) => {
 							</div>
 
 							<div className="space-y-2">
-								<Label htmlFor="email">Instagram Username</Label>
+								<Label htmlFor="ig_username">Instagram Username</Label>
 								<Input
 									id="ig_username"
 									name="ig_username"
@@ -221,7 +227,7 @@ const ContactsFiles = ({ data }: { data: data }) => {
 							</div>
 
 							<div className="space-y-2">
-								<Label htmlFor="email">LINE Username</Label>
+								<Label htmlFor="line_username">LINE Username</Label>
 								<Input
 									id="line_username"
 									name="line_username"

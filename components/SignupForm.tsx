@@ -102,8 +102,15 @@ export default function SignupForm() {
 
 		try {
 			setEmailSignupLoading(true);
-			const msg = await signUpWithEmail(email, password, firstName, lastName);
-			setMessage(String(msg));
+			const result = await signUpWithEmail(
+				email,
+				password,
+				firstName,
+				lastName,
+			);
+			setMessage(
+				typeof result === "string" ? result : "Account created successfully!",
+			);
 		} catch (error) {
 			setError(String(error));
 		} finally {

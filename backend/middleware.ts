@@ -47,11 +47,7 @@ export async function updateSession(request: NextRequest) {
 		!request.nextUrl.pathname.startsWith("/auth")
 	) {
 		const url = request.nextUrl.clone();
-		if (request.nextUrl.pathname.startsWith("/signup")) {
-			url.pathname = "/signup";
-		} else {
-			url.pathname = "/login";
-		}
+		url.pathname = "/login";
 		return NextResponse.redirect(url);
 	}
 

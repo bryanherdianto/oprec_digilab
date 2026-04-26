@@ -2,6 +2,36 @@
 
 import { createClient } from "./supabaseServer";
 
+const ALLOWED_MIME_TYPES = {
+	"cv-files": ["application/pdf"],
+	"profile-photos": ["image/jpeg", "image/png"],
+	transkrip: ["image/jpeg", "image/png"],
+};
+
+const MAX_FILE_SIZES = {
+	"cv-files": 5 * 1024 * 1024,
+	"profile-photos": 2 * 1024 * 1024,
+	transkrip: 2 * 1024 * 1024,
+};
+
+const RELEVANT_FIELDS = [
+	"nama",
+	"npm",
+	"tanggal_lahir",
+	"angkatan",
+	"phone",
+	"ig_username",
+	"line_username",
+	"discord_username",
+	"cv_url",
+	"foto_url",
+	"transkrip_url",
+	"question_1",
+	"question_2",
+	"question_3",
+	"question_4",
+];
+
 export const getCurrentUser = async () => {
 	try {
 		const supabaseClient = await createClient();
@@ -15,32 +45,52 @@ export const getCurrentUser = async () => {
 	}
 };
 
-export const uploadFile = async (file, bucketName) => {
+export const uploadFile = async (file, bucketName, existingUrl) => {
 	try {
+		if (!ALLOWED_MIME_TYPES[bucketName]) {
+			throw new Error(`Unknown bucket: ${bucketName}`);
+		}
+
+		if (!ALLOWED_MIME_TYPES[bucketName].includes(file.type)) {
+			throw new Error(
+				`Invalid file type for ${bucketName}. Allowed: ${ALLOWED_MIME_TYPES[bucketName].join(", ")}`,
+			);
+		}
+
+		if (file.size > MAX_FILE_SIZES[bucketName]) {
+			const maxMB = MAX_FILE_SIZES[bucketName] / (1024 * 1024);
+			throw new Error(
+				`File size exceeds the ${maxMB}MB limit for ${bucketName}`,
+			);
+		}
+
 		const supabaseClient = await createClient();
 		const {
 			data: { user },
 		} = await supabaseClient.auth.getUser();
 
 		const fileExt = file.name.split(".").pop();
-		let fileName;
 		const userName =
-			user?.user_metadata?.full_name || user?.user_metadata?.display_name;
-
-		if (!userName) {
-			console.error(
-				"User name (full_name or display_name) not found in metadata.",
-			);
-			throw new Error("User name not found in metadata.");
-		}
+			user?.user_metadata?.full_name ||
+			user?.user_metadata?.display_name ||
+			"user";
 
 		const timestamp = Date.now();
+		const sanitized = userName.replace(/ /g, "");
+		let fileName;
 		if (bucketName === "cv-files") {
-			fileName = `cv-${userName.replace(/ /g, "")}-${timestamp}.${fileExt}`;
+			fileName = `cv-${sanitized}-${timestamp}.${fileExt}`;
 		} else if (bucketName === "profile-photos") {
-			fileName = `photo-${userName.replace(/ /g, "")}-${timestamp}.${fileExt}`;
+			fileName = `photo-${sanitized}-${timestamp}.${fileExt}`;
 		} else if (bucketName === "transkrip") {
-			fileName = `transkrip-${userName.replace(/ /g, "")}-${timestamp}.${fileExt}`;
+			fileName = `transkrip-${sanitized}-${timestamp}.${fileExt}`;
+		}
+
+		if (existingUrl) {
+			const oldPath = existingUrl.split("/").pop();
+			if (oldPath) {
+				await supabaseClient.storage.from(bucketName).remove([oldPath]);
+			}
 		}
 
 		const filePath = `${fileName}`;
@@ -65,28 +115,36 @@ export const uploadFile = async (file, bucketName) => {
 	}
 };
 
-export const uploadCV = async (file) => {
-	return uploadFile(file, "cv-files");
+export const uploadCV = async (file, existingUrl) => {
+	return uploadFile(file, "cv-files", existingUrl);
 };
 
-export const uploadPhoto = async (file) => {
-	return uploadFile(file, "profile-photos");
+export const uploadPhoto = async (file, existingUrl) => {
+	return uploadFile(file, "profile-photos", existingUrl);
 };
 
-export const uploadTranskrip = async (file) => {
-	return uploadFile(file, "transkrip");
+export const uploadTranskrip = async (file, existingUrl) => {
+	return uploadFile(file, "transkrip", existingUrl);
 };
 
-export const addPersonalInformation = async (user) => {
+export const addPersonalInformation = async (formData) => {
 	try {
 		const supabaseClient = await createClient();
+		const {
+			data: { user: authUser },
+			error: authError,
+		} = await supabaseClient.auth.getUser();
+		if (authError || !authUser) {
+			throw new Error("User is not authenticated.");
+		}
+
 		const { data, error } = await supabaseClient.from("applicants").upsert([
 			{
-				id: user.id,
-				nama: user.nama,
-				npm: user.npm,
-				angkatan: user.angkatan,
-				tanggal_lahir: user.tanggal_lahir,
+				id: authUser.id,
+				nama: formData.nama,
+				npm: formData.npm,
+				angkatan: formData.angkatan,
+				tanggal_lahir: formData.tanggal_lahir,
 			},
 		]);
 		if (error) {
@@ -100,19 +158,27 @@ export const addPersonalInformation = async (user) => {
 	}
 };
 
-export const addContactsFiles = async (user) => {
+export const addContactsFiles = async (formData) => {
 	try {
 		const supabaseClient = await createClient();
+		const {
+			data: { user: authUser },
+			error: authError,
+		} = await supabaseClient.auth.getUser();
+		if (authError || !authUser) {
+			throw new Error("User is not authenticated.");
+		}
+
 		const { data, error } = await supabaseClient.from("applicants").upsert([
 			{
-				id: user.id,
-				phone: user.phone,
-				ig_username: user.ig_username,
-				line_username: user.line_username,
-				discord_username: user.discord_username,
-				cv_url: user.cv_url,
-				foto_url: user.foto_url,
-				transkrip_url: user.transkrip_url,
+				id: authUser.id,
+				phone: formData.phone,
+				ig_username: formData.ig_username,
+				line_username: formData.line_username,
+				discord_username: formData.discord_username,
+				cv_url: formData.cv_url,
+				foto_url: formData.foto_url,
+				transkrip_url: formData.transkrip_url,
 			},
 		]);
 		if (error) {
@@ -126,16 +192,24 @@ export const addContactsFiles = async (user) => {
 	}
 };
 
-export const addEssays = async (user) => {
+export const addEssays = async (formData) => {
 	try {
 		const supabaseClient = await createClient();
+		const {
+			data: { user: authUser },
+			error: authError,
+		} = await supabaseClient.auth.getUser();
+		if (authError || !authUser) {
+			throw new Error("User is not authenticated.");
+		}
+
 		const { data, error } = await supabaseClient.from("applicants").upsert([
 			{
-				id: user.id,
-				question_1: user.question_1,
-				question_2: user.question_2,
-				question_3: user.question_3,
-				question_4: user.question_4,
+				id: authUser.id,
+				question_1: formData.question_1,
+				question_2: formData.question_2,
+				question_3: formData.question_3,
+				question_4: formData.question_4,
 			},
 		]);
 		if (error) {
@@ -173,17 +247,26 @@ export const changeStatus = async (user) => {
 			throw new Error(`Failed to fetch user data: ${fetchError.message}`);
 		}
 
-		const nullFields = [];
-		for (const [key, value] of Object.entries(applicantData)) {
-			if (value === null || value === undefined) {
-				nullFields.push(key);
-			}
+		if (applicantData.is_submitted === true) {
+			throw new Error(
+				"Application has already been submitted and cannot be changed.",
+			);
 		}
 
-		if (user.is_submitted === true && nullFields.length > 0) {
-			throw new Error(
-				`Cannot submit because the following fields are NULL: ${nullFields.join(", ")}.`,
-			);
+		if (user.is_submitted === true) {
+			const emptyFields = [];
+			for (const field of RELEVANT_FIELDS) {
+				const value = applicantData[field];
+				if (value === null || value === undefined || value === "") {
+					emptyFields.push(field);
+				}
+			}
+
+			if (emptyFields.length > 0) {
+				throw new Error(
+					`Cannot submit because the following fields are empty: ${emptyFields.join(", ")}.`,
+				);
+			}
 		}
 
 		const { data, error } = await supabaseClient.from("applicants").upsert([
@@ -265,16 +348,17 @@ export const getNullLength = async () => {
 			throw new Error(`Failed to fetch user data: ${fetchError.message}`);
 		}
 
-		const nullFields = [];
-		for (const [key, value] of Object.entries(applicantData)) {
-			if (value === null || value === undefined) {
-				nullFields.push(key);
+		let filledCount = 0;
+		for (const field of RELEVANT_FIELDS) {
+			const value = applicantData[field];
+			if (value !== null && value !== undefined && value !== "") {
+				filledCount++;
 			}
 		}
 
-		return ((15 - nullFields.length) / 15.0) * 100.0;
+		return (filledCount / RELEVANT_FIELDS.length) * 100.0;
 	} catch (error) {
-		console.error("Error changing status:", error);
+		console.error("Error calculating progress:", error);
 		throw error;
 	}
 };
@@ -309,7 +393,7 @@ export const getUserData = async () => {
 
 		return data;
 	} catch (error) {
-		console.error("Error changing status:", error);
+		console.error("Error fetching user data:", error);
 		throw error;
 	}
 };

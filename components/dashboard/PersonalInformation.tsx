@@ -34,7 +34,7 @@ interface PersonalInfoData {
 	batch: string;
 }
 
-const PersonalInformation = ({ data }: { data: data }) => {
+const PersonalInformation = ({ data }: { data: data | null }) => {
 	const router = useRouter();
 	const [formData, setFormData] = useState<PersonalInfoData>({
 		fullName: "",
@@ -55,7 +55,7 @@ const PersonalInformation = ({ data }: { data: data }) => {
 			batch: data?.angkatan || "",
 		});
 
-		setIsSubmitted(data?.is_submitted);
+		setIsSubmitted(data?.is_submitted ?? false);
 	}, [data]);
 
 	const handleChange = (
@@ -76,8 +76,16 @@ const PersonalInformation = ({ data }: { data: data }) => {
 		try {
 			const user = await getCurrentUser();
 
+			if (!user) {
+				setMessage({
+					text: "Session expired. Please log in again.",
+					type: "error",
+				});
+				return;
+			}
+
 			await addPersonalInformation({
-				id: user?.id,
+				id: user.id,
 				nama: formData.fullName,
 				npm: formData.npm,
 				angkatan: formData.batch,

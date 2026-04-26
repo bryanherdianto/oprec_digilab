@@ -58,7 +58,7 @@ export function Registration({
 }: {
 	user: User | null;
 	progress: number;
-	data: data;
+	data: data | null;
 }) {
 	const [activeSection, setActiveSection] = useState("dashboard");
 	const [open, setOpen] = useState(false);
@@ -185,7 +185,7 @@ const Dashboard = ({
 }: {
 	activeSection: string;
 	progress: number;
-	data: data;
+	data: data | null;
 }) => {
 	const renderSection = () => {
 		switch (activeSection) {

@@ -16,7 +16,9 @@ function Hero() {
 
 	// Update countdown based on target date
 	useEffect(() => {
-		const targetDate = new Date("2026-04-25T23:59:59").getTime();
+		const targetDate = new Date(
+			process.env.NEXT_PUBLIC_DEADLINE || "2026-05-09T23:59:59",
+		).getTime();
 
 		const updateCountdown = () => {
 			const now = new Date().getTime();

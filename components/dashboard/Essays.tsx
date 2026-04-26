@@ -33,7 +33,7 @@ interface EssayData {
 	commitment: string;
 }
 
-const Essays = ({ data }: { data: data }) => {
+const Essays = ({ data }: { data: data | null }) => {
 	const router = useRouter();
 	const [formData, setFormData] = useState<EssayData>({
 		motivation: "",
@@ -50,7 +50,9 @@ const Essays = ({ data }: { data: data }) => {
 		commitment: 0,
 	});
 	const [isSubmitted, setIsSubmitted] = useState(false);
-	const targetDate = new Date("2026-04-25T23:59:59").getTime();
+	const targetDate = new Date(
+		process.env.NEXT_PUBLIC_DEADLINE || "2026-05-09T23:59:59",
+	).getTime();
 	const [isDeadlinePassed, setIsDeadlinePassed] = useState(false);
 
 	useEffect(() => {
@@ -73,7 +75,7 @@ const Essays = ({ data }: { data: data }) => {
 		};
 
 		setFormData(initialFormData);
-		setIsSubmitted(data?.is_submitted);
+		setIsSubmitted(data?.is_submitted ?? false);
 
 		const newWordCounts = Object.fromEntries(
 			Object.entries(initialFormData).map(([key, value]) => [
