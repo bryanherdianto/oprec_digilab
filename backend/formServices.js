@@ -27,12 +27,13 @@ export const uploadFile = async (file, bucketName) => {
       throw new Error('User name not found in metadata.');
     }
 
+    const timestamp = Date.now();
     if (bucketName === 'cv-files') {
-      fileName = `cv-${userName.replace(/ /g, '')}.${fileExt}`;
+      fileName = `cv-${userName.replace(/ /g, '')}-${timestamp}.${fileExt}`;
     } else if (bucketName === 'profile-photos') {
-      fileName = `photo-${userName.replace(/ /g, '')}.${fileExt}`;
+      fileName = `photo-${userName.replace(/ /g, '')}-${timestamp}.${fileExt}`;
     } else if (bucketName === 'transkrip') {
-      fileName = `transkrip-${userName.replace(/ /g, '')}.${fileExt}`;
+      fileName = `transkrip-${userName.replace(/ /g, '')}-${timestamp}.${fileExt}`;
     }
 
     const filePath = `${fileName}`;

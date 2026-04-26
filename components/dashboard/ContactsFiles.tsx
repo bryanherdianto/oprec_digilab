@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { FileUpload } from "@/components/ui/file-upload";
 import { getCurrentUser } from '@/backend/googleServices';
 import { addContactsFiles, uploadCV, uploadPhoto, uploadTranskrip } from '@/backend/formServices';
+import { useRouter } from 'next/navigation';
 
 interface data {
   nama: string;
@@ -43,6 +44,7 @@ interface ContactFilesData {
 }
 
 const ContactsFiles = ({ data }: { data: data }) => {
+  const router = useRouter();
   const [formData, setFormData] = useState<ContactFilesData>({
     phone: '',
     discord_username: '',
@@ -132,6 +134,7 @@ const ContactsFiles = ({ data }: { data: data }) => {
       });
 
       setMessage({ text: 'Contacts and files saved successfully!', type: 'success' });
+      router.refresh();
     } catch (error) {
       console.error('Error saving contacts and files:', error);
       setMessage({ text: 'Failed to save information. Please try again.', type: 'error' });

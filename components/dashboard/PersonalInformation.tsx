@@ -5,6 +5,7 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { addPersonalInformation } from '@/backend/formServices';
 import { getCurrentUser } from '@/backend/googleServices';
+import { useRouter } from 'next/navigation';
 
 interface data {
     nama: string;
@@ -34,6 +35,7 @@ interface PersonalInfoData {
 }
 
 const PersonalInformation = ({ data }: { data: data }) => {
+    const router = useRouter();
     const [formData, setFormData] = useState<PersonalInfoData>({
         fullName: '',
         npm: '',
@@ -81,6 +83,7 @@ const PersonalInformation = ({ data }: { data: data }) => {
             });
 
             setMessage({ text: 'Personal information saved successfully!', type: 'success' });
+            router.refresh();
         } catch (error) {
             console.error('Error saving personal information:', error);
             setMessage({ text: 'Failed to save information. Please try again.', type: 'error' });

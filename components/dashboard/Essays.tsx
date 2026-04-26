@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { changeStatus, addEssays } from '@/backend/formServices';
 import { getCurrentUser } from '@/backend/googleServices';
+import { useRouter } from 'next/navigation';
 
 interface data {
     nama: string;
@@ -33,6 +34,7 @@ interface EssayData {
 }
 
 const Essays = ({ data }: { data: data }) => {
+    const router = useRouter();
     const [formData, setFormData] = useState<EssayData>({
         motivation: '',
         experience: '',
@@ -48,7 +50,7 @@ const Essays = ({ data }: { data: data }) => {
         commitment: 0
     });
     const [isSubmitted, setIsSubmitted] = useState(false);
-    const targetDate = new Date('2025-05-09T23:59:59').getTime();
+    const targetDate = new Date('2026-04-25T23:59:59').getTime();
     const [isDeadlinePassed, setIsDeadlinePassed] = useState(false);
 
     useEffect(() => {
@@ -140,6 +142,7 @@ const Essays = ({ data }: { data: data }) => {
             });
 
             setMessage({ text: 'Essays saved successfully!', type: 'success' });
+            router.refresh();
         } catch (error) {
             console.error('Error saving essays:', error);
             setMessage({ text: 'Failed to save essays. Please try again.', type: 'error' });
@@ -168,6 +171,7 @@ const Essays = ({ data }: { data: data }) => {
             });
 
             setMessage({ text: 'Application submitted successfully! Please go back to Dashboard section to join LINE group!', type: 'success' });
+            router.refresh();
         } catch (error) {
             console.error('Error submitting application:', error);
             if (error instanceof Error && error.message.includes("NULL")) {

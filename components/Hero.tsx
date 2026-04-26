@@ -16,8 +16,7 @@ function Hero() {
 
     // Update countdown based on target date
     useEffect(() => {
-        // Target date: May 9, 2025 (one month after current date)
-        const targetDate = new Date('2025-05-09T23:59:59').getTime();
+        const targetDate = new Date('2026-04-25T23:59:59').getTime();
 
         const updateCountdown = () => {
             const now = new Date().getTime();
@@ -65,7 +64,7 @@ function Hero() {
             </div>
             <div className="flex flex-col justify-center items-center mt-20">
                 <div>
-                    Deadline: <strong>May 9, 2025</strong>
+                    Deadline: <strong>April 25, 2026</strong>
                 </div>
                 <div className="grid grid-flow-col gap-5 text-center auto-cols-max">
                     <div className="flex flex-col p-2 bg-neutral rounded-box text-neutral-content">

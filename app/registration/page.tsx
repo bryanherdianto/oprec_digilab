@@ -2,9 +2,11 @@ import { getCurrentUser, getNullLength, getUserData } from '@/backend/formServic
 import { Registration } from '@/components/Registration';
 
 async function Page() {
-  const user = await getCurrentUser();
-  const progress = await getNullLength();
-  const data = await getUserData();
+  const [user, progress, data] = await Promise.all([
+    getCurrentUser(),
+    getNullLength(),
+    getUserData(),
+  ]);
 
   return <Registration user={user} progress={progress} data={data} />;
 }

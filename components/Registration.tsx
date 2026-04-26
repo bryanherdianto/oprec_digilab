@@ -12,7 +12,6 @@ import { cn } from "@/lib/utils";
 import PersonalInformation from "./dashboard/PersonalInformation";
 import ContactsFiles from "./dashboard/ContactsFiles";
 import Essays from "./dashboard/Essays";
-import { useSearchParams, useRouter } from "next/navigation";
 import Link from "next/link";
 
 interface UserMetadata {
@@ -48,14 +47,12 @@ interface data {
 }
 
 export function Registration({ user, progress, data }: { user: User | null; progress: number; data: data }) {
-  const searchParams = useSearchParams();
-  const router = useRouter();
-  const activeSection = searchParams.get("tab") || "dashboard";
+  const [activeSection, setActiveSection] = useState("dashboard");
+  const [open, setOpen] = useState(false);
 
   const links = [
     {
       label: "Dashboard",
-      href: "?tab=dashboard",
       icon: (
         <IconBrandTabler className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />
       ),
@@ -63,7 +60,6 @@ export function Registration({ user, progress, data }: { user: User | null; prog
     },
     {
       label: "Personal Info",
-      href: "?tab=personal",
       icon: (
         <IconUserBolt className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />
       ),
@@ -71,7 +67,6 @@ export function Registration({ user, progress, data }: { user: User | null; prog
     },
     {
       label: "Contacts & Files",
-      href: "?tab=contacts",
       icon: (
         <IconAddressBook className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />
       ),
@@ -79,18 +74,12 @@ export function Registration({ user, progress, data }: { user: User | null; prog
     },
     {
       label: "Essays",
-      href: "?tab=essays",
       icon: (
         <IconFileText className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />
       ),
       id: "essays",
     },
   ];
-  const [open, setOpen] = useState(false);
-
-  const handleLinkClick = (id: string) => {
-    router.push(`?tab=${id}`);
-  };
 
   return (
     <div
@@ -126,15 +115,14 @@ export function Registration({ user, progress, data }: { user: User | null; prog
             </Link>
             <div className="mt-8 flex flex-col gap-2">
               {links.map((link, idx) => (
-                <div
+                <SidebarLink
                   key={idx}
-                  onClick={() => handleLinkClick(link.id)}
+                  link={{ label: link.label, href: "#", icon: link.icon }}
+                  onClick={() => setActiveSection(link.id)}
                   className={cn({
                     "font-bold": activeSection === link.id,
                   })}
-                >
-                  <SidebarLink link={link} />
-                </div>
+                />
               ))}
               <SidebarLogout />
             </div>

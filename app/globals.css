@@ -133,3 +133,15 @@ html {
 *::-webkit-scrollbar {
   display: none; /* Chrome, Safari, Opera */
 }
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+}
+
+input[type="password"]::-ms-reveal {
+  filter: invert(1);
+}
+
+input[type="password"]::-webkit-textfield-decoration-container {
+  filter: invert(1);
+}
