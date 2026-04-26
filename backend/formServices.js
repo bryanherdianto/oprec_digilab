@@ -1,304 +1,315 @@
-'use server';
+"use server";
 
 import { createClient } from "./supabaseServer";
 
 export const getCurrentUser = async () => {
-  try {
-    const supabaseClient = await createClient();
-    const { data: { user } } = await supabaseClient.auth.getUser();
-    return user;
-  } catch (error) {
-    console.error('Error fetching current user:', error);
-    return null;
-  }
+	try {
+		const supabaseClient = await createClient();
+		const {
+			data: { user },
+		} = await supabaseClient.auth.getUser();
+		return user;
+	} catch (error) {
+		console.error("Error fetching current user:", error);
+		return null;
+	}
 };
 
 export const uploadFile = async (file, bucketName) => {
-  try {
-    const supabaseClient = await createClient();
-    const { data: { user } } = await supabaseClient.auth.getUser();
+	try {
+		const supabaseClient = await createClient();
+		const {
+			data: { user },
+		} = await supabaseClient.auth.getUser();
 
-    const fileExt = file.name.split('.').pop();
-    let fileName;
-    const userName = user?.user_metadata?.full_name || user?.user_metadata?.display_name;
+		const fileExt = file.name.split(".").pop();
+		let fileName;
+		const userName =
+			user?.user_metadata?.full_name || user?.user_metadata?.display_name;
 
-    if (!userName) {
-      console.error('User name (full_name or display_name) not found in metadata.');
-      throw new Error('User name not found in metadata.');
-    }
+		if (!userName) {
+			console.error(
+				"User name (full_name or display_name) not found in metadata.",
+			);
+			throw new Error("User name not found in metadata.");
+		}
 
-    const timestamp = Date.now();
-    if (bucketName === 'cv-files') {
-      fileName = `cv-${userName.replace(/ /g, '')}-${timestamp}.${fileExt}`;
-    } else if (bucketName === 'profile-photos') {
-      fileName = `photo-${userName.replace(/ /g, '')}-${timestamp}.${fileExt}`;
-    } else if (bucketName === 'transkrip') {
-      fileName = `transkrip-${userName.replace(/ /g, '')}-${timestamp}.${fileExt}`;
-    }
+		const timestamp = Date.now();
+		if (bucketName === "cv-files") {
+			fileName = `cv-${userName.replace(/ /g, "")}-${timestamp}.${fileExt}`;
+		} else if (bucketName === "profile-photos") {
+			fileName = `photo-${userName.replace(/ /g, "")}-${timestamp}.${fileExt}`;
+		} else if (bucketName === "transkrip") {
+			fileName = `transkrip-${userName.replace(/ /g, "")}-${timestamp}.${fileExt}`;
+		}
 
-    const filePath = `${fileName}`;
+		const filePath = `${fileName}`;
 
-    const { error } = await supabaseClient.storage
-      .from(bucketName)
-      .upload(filePath, file);
+		const { error } = await supabaseClient.storage
+			.from(bucketName)
+			.upload(filePath, file);
 
-    if (error) {
-      console.error(`Error uploading to ${bucketName}:`, error);
-      throw new Error(`Failed to upload file: ${error.message}`);
-    }
+		if (error) {
+			console.error(`Error uploading to ${bucketName}:`, error);
+			throw new Error(`Failed to upload file: ${error.message}`);
+		}
 
-    const { data: urlData } = supabaseClient.storage
-      .from(bucketName)
-      .getPublicUrl(filePath);
+		const { data: urlData } = supabaseClient.storage
+			.from(bucketName)
+			.getPublicUrl(filePath);
 
-    return urlData.publicUrl;
-  } catch (error) {
-    console.error(`Error uploading file to ${bucketName}:`, error);
-    throw error;
-  }
+		return urlData.publicUrl;
+	} catch (error) {
+		console.error(`Error uploading file to ${bucketName}:`, error);
+		throw error;
+	}
 };
 
 export const uploadCV = async (file) => {
-  return uploadFile(file, 'cv-files');
+	return uploadFile(file, "cv-files");
 };
 
 export const uploadPhoto = async (file) => {
-  return uploadFile(file, 'profile-photos');
+	return uploadFile(file, "profile-photos");
 };
 
 export const uploadTranskrip = async (file) => {
-  return uploadFile(file, 'transkrip');
+	return uploadFile(file, "transkrip");
 };
 
 export const addPersonalInformation = async (user) => {
-  try {
-    const supabaseClient = await createClient();
-    const { data, error } = await supabaseClient
-      .from('applicants')
-      .upsert([
-        {
-          id: user.id,
-          nama: user.nama,
-          npm: user.npm,
-          angkatan: user.angkatan,
-          tanggal_lahir: user.tanggal_lahir
-        }
-      ])
-    if (error) {
-      console.error('Error adding personal information:', error);
-      throw new Error(`Failed to add personal information: ${error.message}`);
-    }
-    return data;
-  } catch (error) {
-    console.error('Error adding personal information:', error);
-    throw error;
-  }
-}
+	try {
+		const supabaseClient = await createClient();
+		const { data, error } = await supabaseClient.from("applicants").upsert([
+			{
+				id: user.id,
+				nama: user.nama,
+				npm: user.npm,
+				angkatan: user.angkatan,
+				tanggal_lahir: user.tanggal_lahir,
+			},
+		]);
+		if (error) {
+			console.error("Error adding personal information:", error);
+			throw new Error(`Failed to add personal information: ${error.message}`);
+		}
+		return data;
+	} catch (error) {
+		console.error("Error adding personal information:", error);
+		throw error;
+	}
+};
 
 export const addContactsFiles = async (user) => {
-  try {
-    const supabaseClient = await createClient();
-    const { data, error } = await supabaseClient
-      .from('applicants')
-      .upsert([
-        {
-          id: user.id,
-          phone: user.phone,
-          ig_username: user.ig_username,
-          line_username: user.line_username,
-          discord_username: user.discord_username,
-          cv_url: user.cv_url,
-          foto_url: user.foto_url,
-          transkrip_url: user.transkrip_url
-        }
-      ])
-    if (error) {
-      console.error('Error adding contacts and files:', error);
-      throw new Error(`Failed to add contacts and files: ${error.message}`);
-    }
-    return data;
-  } catch (error) {
-    console.error('Error adding contacts and files:', error);
-    throw error;
-  }
-}
+	try {
+		const supabaseClient = await createClient();
+		const { data, error } = await supabaseClient.from("applicants").upsert([
+			{
+				id: user.id,
+				phone: user.phone,
+				ig_username: user.ig_username,
+				line_username: user.line_username,
+				discord_username: user.discord_username,
+				cv_url: user.cv_url,
+				foto_url: user.foto_url,
+				transkrip_url: user.transkrip_url,
+			},
+		]);
+		if (error) {
+			console.error("Error adding contacts and files:", error);
+			throw new Error(`Failed to add contacts and files: ${error.message}`);
+		}
+		return data;
+	} catch (error) {
+		console.error("Error adding contacts and files:", error);
+		throw error;
+	}
+};
 
 export const addEssays = async (user) => {
-  try {
-    const supabaseClient = await createClient();
-    const { data, error } = await supabaseClient
-      .from('applicants')
-      .upsert([
-        {
-          id: user.id,
-          question_1: user.question_1,
-          question_2: user.question_2,
-          question_3: user.question_3,
-          question_4: user.question_4
-        }
-      ])
-    if (error) {
-      console.error('Error adding essays:', error);
-      throw new Error(`Failed to add essays: ${error.message}`);
-    }
-    return data;
-  } catch (error) {
-    console.error('Error adding essays:', error);
-    throw error;
-  }
-}
+	try {
+		const supabaseClient = await createClient();
+		const { data, error } = await supabaseClient.from("applicants").upsert([
+			{
+				id: user.id,
+				question_1: user.question_1,
+				question_2: user.question_2,
+				question_3: user.question_3,
+				question_4: user.question_4,
+			},
+		]);
+		if (error) {
+			console.error("Error adding essays:", error);
+			throw new Error(`Failed to add essays: ${error.message}`);
+		}
+		return data;
+	} catch (error) {
+		console.error("Error adding essays:", error);
+		throw error;
+	}
+};
 
 export const changeStatus = async (user) => {
-  try {
-    const supabaseClient = await createClient();
-    const { data: { user: authUser }, error: authError } = await supabaseClient.auth.getUser();
-    if (authError || !authUser) {
-      throw new Error('User is not authenticated.');
-    }
+	try {
+		const supabaseClient = await createClient();
+		const {
+			data: { user: authUser },
+			error: authError,
+		} = await supabaseClient.auth.getUser();
+		if (authError || !authUser) {
+			throw new Error("User is not authenticated.");
+		}
 
-    const userId = authUser.id;
+		const userId = authUser.id;
 
-    const { data: applicantData, error: fetchError } = await supabaseClient
-      .from('applicants')
-      .select('*')
-      .eq('id', userId)
-      .single();
+		const { data: applicantData, error: fetchError } = await supabaseClient
+			.from("applicants")
+			.select("*")
+			.eq("id", userId)
+			.single();
 
-    if (fetchError) {
-      console.error('Error fetching user data:', fetchError);
-      throw new Error(`Failed to fetch user data: ${fetchError.message}`);
-    }
+		if (fetchError) {
+			console.error("Error fetching user data:", fetchError);
+			throw new Error(`Failed to fetch user data: ${fetchError.message}`);
+		}
 
-    const nullFields = [];
-    for (const [key, value] of Object.entries(applicantData)) {
-      if (value === null || value === undefined) {
-        nullFields.push(key);
-      }
-    }
+		const nullFields = [];
+		for (const [key, value] of Object.entries(applicantData)) {
+			if (value === null || value === undefined) {
+				nullFields.push(key);
+			}
+		}
 
-    if (user.is_submitted === true && nullFields.length > 0) {
-      throw new Error(
-        `Cannot submit because the following fields are NULL: ${nullFields.join(', ')}.`
-      );
-    }
+		if (user.is_submitted === true && nullFields.length > 0) {
+			throw new Error(
+				`Cannot submit because the following fields are NULL: ${nullFields.join(", ")}.`,
+			);
+		}
 
-    const { data, error } = await supabaseClient
-      .from('applicants')
-      .upsert([
-        {
-          id: userId,
-          is_submitted: user.is_submitted,
-        },
-      ]);
+		const { data, error } = await supabaseClient.from("applicants").upsert([
+			{
+				id: userId,
+				is_submitted: user.is_submitted,
+			},
+		]);
 
-    if (error) {
-      console.error('Error changing status:', error);
-      throw new Error(`Failed to change status: ${error.message}`);
-    }
+		if (error) {
+			console.error("Error changing status:", error);
+			throw new Error(`Failed to change status: ${error.message}`);
+		}
 
-    return data;
-  } catch (error) {
-    console.error('Error changing status:', error);
-    throw error;
-  }
+		return data;
+	} catch (error) {
+		console.error("Error changing status:", error);
+		throw error;
+	}
 };
 
 export const getStatus = async () => {
-  try {
-    const supabaseClient = await createClient();
-    const { data: { user: authUser }, error: authError } = await supabaseClient.auth.getUser();
-    if (authError || !authUser) {
-      throw new Error('User is not authenticated.');
-    }
+	try {
+		const supabaseClient = await createClient();
+		const {
+			data: { user: authUser },
+			error: authError,
+		} = await supabaseClient.auth.getUser();
+		if (authError || !authUser) {
+			throw new Error("User is not authenticated.");
+		}
 
-    const userId = authUser.id;
+		const userId = authUser.id;
 
-    const { data, error } = await supabaseClient
-      .from('applicants')
-      .select('is_submitted')
-      .eq('id', userId)
-      .single();
+		const { data, error } = await supabaseClient
+			.from("applicants")
+			.select("is_submitted")
+			.eq("id", userId)
+			.single();
 
-    if (error) {
-      console.error('Error fetching status:', error);
-      throw new Error(`Failed to fetch status: ${error.message}`);
-    }
+		if (error) {
+			console.error("Error fetching status:", error);
+			throw new Error(`Failed to fetch status: ${error.message}`);
+		}
 
-    return data.is_submitted;
-  } catch (error) {
-    console.error('Error fetching status:', error);
-    throw error;
-  }
-}
+		return data.is_submitted;
+	} catch (error) {
+		console.error("Error fetching status:", error);
+		throw error;
+	}
+};
 
 export const getNullLength = async () => {
-  try {
-    const supabaseClient = await createClient();
-    const { data: { user: authUser }, error: authError } = await supabaseClient.auth.getUser();
+	try {
+		const supabaseClient = await createClient();
+		const {
+			data: { user: authUser },
+			error: authError,
+		} = await supabaseClient.auth.getUser();
 
-    if (authError || !authUser) {
-      throw new Error('User is not authenticated.');
-    }
+		if (authError || !authUser) {
+			throw new Error("User is not authenticated.");
+		}
 
-    const userId = authUser.id;
+		const userId = authUser.id;
 
-    const { data: applicantData, error: fetchError } = await supabaseClient
-      .from('applicants')
-      .select('*')
-      .eq('id', userId)
-      .maybeSingle();
+		const { data: applicantData, error: fetchError } = await supabaseClient
+			.from("applicants")
+			.select("*")
+			.eq("id", userId)
+			.maybeSingle();
 
-    if (!applicantData && !fetchError) {
-      return 0;
-    }
+		if (!applicantData && !fetchError) {
+			return 0;
+		}
 
-    if (fetchError) {
-      console.error('Error fetching user data:', fetchError);
-      throw new Error(`Failed to fetch user data: ${fetchError.message}`);
-    }
+		if (fetchError) {
+			console.error("Error fetching user data:", fetchError);
+			throw new Error(`Failed to fetch user data: ${fetchError.message}`);
+		}
 
-    const nullFields = [];
-    for (const [key, value] of Object.entries(applicantData)) {
-      if (value === null || value === undefined) {
-        nullFields.push(key);
-      }
-    }
+		const nullFields = [];
+		for (const [key, value] of Object.entries(applicantData)) {
+			if (value === null || value === undefined) {
+				nullFields.push(key);
+			}
+		}
 
-    return ((15 - nullFields.length) / 15.0) * 100.0;
-  } catch (error) {
-    console.error('Error changing status:', error);
-    throw error;
-  }
+		return ((15 - nullFields.length) / 15.0) * 100.0;
+	} catch (error) {
+		console.error("Error changing status:", error);
+		throw error;
+	}
 };
 
 export const getUserData = async () => {
-  try {
-    const supabaseClient = await createClient();
-    const { data: { user: authUser }, error: authError } = await supabaseClient.auth.getUser();
-    if (authError || !authUser) {
-      throw new Error('User is not authenticated.');
-    }
+	try {
+		const supabaseClient = await createClient();
+		const {
+			data: { user: authUser },
+			error: authError,
+		} = await supabaseClient.auth.getUser();
+		if (authError || !authUser) {
+			throw new Error("User is not authenticated.");
+		}
 
-    const userId = authUser.id;
+		const userId = authUser.id;
 
-    const { data, error } = await supabaseClient
-      .from('applicants')
-      .select('*')
-      .eq('id', userId)
-      .maybeSingle();
+		const { data, error } = await supabaseClient
+			.from("applicants")
+			.select("*")
+			.eq("id", userId)
+			.maybeSingle();
 
-    if (error) {
-      console.error('Error fetching user data:', error);
-      throw new Error(`Failed to fetch user data: ${error.message}`);
-    }
+		if (error) {
+			console.error("Error fetching user data:", error);
+			throw new Error(`Failed to fetch user data: ${error.message}`);
+		}
 
-    if (!data) {
-      return null;
-    }
+		if (!data) {
+			return null;
+		}
 
-    return data;
-  } catch (error) {
-    console.error('Error changing status:', error);
-    throw error;
-  }
+		return data;
+	} catch (error) {
+		console.error("Error changing status:", error);
+		throw error;
+	}
 };
