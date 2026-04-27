@@ -137,6 +137,11 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 	filter: invert(1);
 }
 
+input[type="date"] {
+	appearance: none;
+	-webkit-appearance: none;
+}
+
 input[type="password"]::-ms-reveal {
 	filter: invert(1);
 }
