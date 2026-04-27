@@ -101,6 +101,16 @@ This must be done manually in the Supabase Dashboard (not included in migrations
 7. Copy the **Client ID** and **Client Secret**
 8. In your Supabase Dashboard, go to **Authentication → Providers → Google**, enable it, and paste the Client ID and Client Secret
 
+### Configure URL and Redirect Settings
+
+This must be done manually in the Supabase Dashboard. The `config.toml` only affects local development (`supabase start`); the hosted project uses Dashboard settings.
+
+1. Go to **Supabase Dashboard → Authentication → URL Configuration**
+2. Set **Site URL** to your production URL (e.g. `https://yourdomain.com`)
+3. Add the following to **Redirect URLs** (allow list):
+   - `http://localhost:3000/auth/callback` (for local development)
+   - `https://yourdomain.com/auth/callback` (for production)
+
 ### Configure Email Templates
 
 Email templates in `config.toml` and `supabase/templates/` only apply to **local development**. For the hosted project, configure them manually:
